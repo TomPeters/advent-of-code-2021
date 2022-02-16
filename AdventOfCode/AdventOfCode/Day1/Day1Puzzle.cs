@@ -2,6 +2,7 @@ namespace AdventOfCode.Day1;
 
 public static class Day1Puzzle
 {
+    // Part 1
     public static int GetNumberOfMeasurementsLargerThatPreviousMeasurement(int[] measurements)
     {
         return measurements.Skip(1)
@@ -9,6 +10,7 @@ public static class Day1Puzzle
             .Count(m => m.First > m.Second);
     }
 
+    // Part 2
     public static int GetNumberOfThreeMeasurementSlidingWindowsLargerThanPreviousWindow(int[] measurements)
     {
         var threeMeasurementWindows = GetThreeMeasurementWindows(measurements).ToArray();
