@@ -22,19 +22,22 @@ public class Day1
     [Fact]
     public void SolvePart1()
     {
-        var data = FileHelper.ReadFromFile("Day1", "Measurements.txt");
-        var measurements = data.Split("\n").Select(int.Parse).ToArray();
-
-        Assert.Equal(1400, Day1Puzzle.GetNumberOfMeasurementsLargerThatPreviousMeasurement(measurements));
+        Assert.Equal(1400, Day1Puzzle.GetNumberOfMeasurementsLargerThatPreviousMeasurement(RealData));
     }
 
     [Fact]
     public void SolvePart2()
     {
-        var data = FileHelper.ReadFromFile("Day1", "Measurements.txt");
-        var measurements = data.Split("\n").Select(int.Parse).ToArray();
+        Assert.Equal(1429, Day1Puzzle.GetNumberOfThreeMeasurementSlidingWindowsLargerThanPreviousWindow(RealData));
+    }
 
-        Assert.Equal(1429, Day1Puzzle.GetNumberOfThreeMeasurementSlidingWindowsLargerThanPreviousWindow(measurements));
+    static int[] RealData
+    {
+        get
+        {
+            var data = FileHelper.ReadFromFile("Day1", "Measurements.txt");
+            return data.Split("\n").Select(int.Parse).ToArray();
+        }
     }
 
     static int[] SampleMeasurements
