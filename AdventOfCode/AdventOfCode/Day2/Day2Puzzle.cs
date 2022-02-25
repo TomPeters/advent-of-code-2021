@@ -16,39 +16,90 @@ public static class Day2Puzzle
 
     static int CalculateProductOfFinalPositionAndDepth(ISubmarine submarine, IEnumerable<string> movementCommandStrings)
     {
-        var finalSubmarine = movementCommandStrings.Select(GetSubmarineCommands)
-            .Aggregate(submarine, (sub, command) => command(sub));
-        return finalSubmarine.Position.Depth * finalSubmarine.Position.HorizontalPosition;
+        foreach (var command in movementCommandStrings.Select(GetSubmarineCommands))
+        {
+            command.Move(submarine);
+        }
+        return submarine.Position.Depth * submarine.Position.HorizontalPosition;
     }
 
-    static Func<ISubmarine, ISubmarine> GetSubmarineCommands(string command)
+    static IMovementCommand GetSubmarineCommands(string command)
     {
         var commandParts = command.Split(" ");
         var commandType = commandParts[0];
         var units = int.Parse(commandParts[1]);
         return commandType switch
         {
-            "forward" => submarine => submarine.Forward(units),
-            "down" => submarine => submarine.Down(units),
-            "up" => submarine => submarine.Up(units),
+            "forward" => new MoveForwardCommand(units),
+            "down" => new MoveDownCommand(units),
+            "up" => new MoveUpCommand(units),
             _ => throw new Exception($"Command type not recognised {commandType}")
         };
     }
+}
 
+interface IMovementCommand
+{
+    void Move(ISubmarine submarine);
+}
+
+class MoveForwardCommand : IMovementCommand
+{
+    readonly int _units;
+
+    public MoveForwardCommand(int units)
+    {
+        _units = units;
+    }
+
+    public void Move(ISubmarine submarine)
+    {
+        submarine.Forward(_units);
+    }
+}
+
+class MoveDownCommand : IMovementCommand
+{
+    readonly int _units;
+
+    public MoveDownCommand(int units)
+    {
+        _units = units;
+    }
+
+    public void Move(ISubmarine submarine)
+    {
+        submarine.Down(_units);
+    }
+}
+
+class MoveUpCommand : IMovementCommand
+{
+    readonly int _units;
+
+    public MoveUpCommand(int units)
+    {
+        _units = units;
+    }
+
+    public void Move(ISubmarine submarine)
+    {
+        submarine.Up(_units);
+    }
 }
 
 interface ISubmarine
 {
     Position Position { get; }
-    ISubmarine Forward(int units);
-    ISubmarine Down(int units);
-    ISubmarine Up(int units);
+    void Forward(int units);
+    void Down(int units);
+    void Up(int units);
 }
 
 class SubmarineWithAim : ISubmarine
 {
-    readonly int _aim;
-    public Position Position { get; }
+    int _aim;
+    public Position Position { get; private set; }
 
     public SubmarineWithAim(Position position) : this(position, 0)
     {
@@ -60,34 +111,34 @@ class SubmarineWithAim : ISubmarine
         Position = position;
     }
 
-    public ISubmarine Forward(int units)
+    public void Forward(int units)
     {
-        return new SubmarineWithAim(Position.OffsetHorizontally(units).OffsetDepth(_aim * units), _aim);
+        Position = Position.OffsetHorizontally(units).OffsetDepth(_aim * units);
     }
 
-    public ISubmarine Down(int units)
+    public void Down(int units)
     {
-        return new SubmarineWithAim(Position, _aim + units);
+        _aim += units;
     }
 
-    public ISubmarine Up(int units)
+    public void Up(int units)
     {
-        return new SubmarineWithAim(Position, _aim - units);
+        _aim -= units;
     }
 }
 
 class Submarine : ISubmarine
 {
-    public Position Position { get; }
+    public Position Position { get; private set; }
 
     public Submarine(Position position)
     {
         Position = position;
     }
 
-    public ISubmarine Forward(int units) => new Submarine(Position.OffsetHorizontally(units));
-    public ISubmarine Down(int units) => new Submarine(Position.OffsetDepth(units));
-    public ISubmarine Up(int units) => new Submarine(Position.OffsetDepth(-units));
+    public void Forward(int units) => Position = Position.OffsetHorizontally(units);
+    public void Down(int units) => Position = Position.OffsetDepth(units);
+    public void Up(int units) => Position = Position.OffsetDepth(-units);
 }
 
 class Position
