@@ -19,6 +19,18 @@ public class Day3
         Assert.Equal(3985686, Day3Puzzle.GetPowerConsumption(RealData));
     }
 
+    [Fact]
+    public void Part2WorksForSampleData()
+    {
+        Assert.Equal(230, Day3Puzzle.GetLifeSupportRating(SampleData));
+    }
+
+    [Fact]
+    public void Part2WorksForRealData()
+    {
+        Assert.Equal(2555739, Day3Puzzle.GetLifeSupportRating(RealData));
+    }
+
     static readonly string[] SampleData = {
         "00100",
         "11110",
