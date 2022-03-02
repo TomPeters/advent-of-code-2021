@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using AdventOfCode.Day3;
 using Xunit;
 
@@ -10,6 +11,12 @@ public class Day3
     public void Part1WorksForSampleData()
     {
         Assert.Equal(198, Day3Puzzle.GetSubmarinePowerConsumption(SampleData));
+    }
+
+    [Fact]
+    public void Part1WorksForRealData()
+    {
+        Assert.Equal(3985686, Day3Puzzle.GetSubmarinePowerConsumption(RealData));
     }
 
     static readonly string[] SampleData = {
@@ -26,4 +33,7 @@ public class Day3
         "00010",
         "01010"
     };
+
+
+    static IEnumerable<string> RealData => FileHelper.ReadFromFile("Day3", "DiagnosticsReport.txt").Split("\n");
 }
