@@ -10,13 +10,13 @@ public class Day3
     [Fact]
     public void Part1WorksForSampleData()
     {
-        Assert.Equal(198, Day3Puzzle.GetSubmarinePowerConsumption(SampleData));
+        Assert.Equal(198, Day3Puzzle.GetPowerConsumption(SampleData));
     }
 
     [Fact]
     public void Part1WorksForRealData()
     {
-        Assert.Equal(3985686, Day3Puzzle.GetSubmarinePowerConsumption(RealData));
+        Assert.Equal(3985686, Day3Puzzle.GetPowerConsumption(RealData));
     }
 
     static readonly string[] SampleData = {
