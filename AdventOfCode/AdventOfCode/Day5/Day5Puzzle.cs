@@ -40,8 +40,9 @@ public class Line
                 .Select(xAndY => new Coordinate(xAndY.First, xAndY.Second));
         }
 
+        // This is the cartesian product of the two ranges
         return EnumerableExtensions.BidirectionalRange(_lineEndpoints.Start.X, _lineEndpoints.End.X)
-            .SelectMany(x => EnumerableExtensions.BidirectionalRange(_lineEndpoints.Start.Y, _lineEndpoints.End.Y).Select(y => new Coordinate(x, y)));
+            .SelectMany(_ => EnumerableExtensions.BidirectionalRange(_lineEndpoints.Start.Y, _lineEndpoints.End.Y), (x, y) => new Coordinate(x, y));
     }
 }
 
