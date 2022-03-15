@@ -27,6 +27,10 @@
       <EmbeddedResource Include="Day2\Commands.txt" />
       <None Remove="Day3\DiagnosticsReport.txt" />
       <EmbeddedResource Include="Day3\DiagnosticsReport.txt" />
+      <None Remove="Day4\SampleData.txt" />
+      <EmbeddedResource Include="Day4\SampleData.txt" />
+      <None Remove="Day4\RealBingoData.txt" />
+      <EmbeddedResource Include="Day4\RealBingoData.txt" />
     </ItemGroup>
 
     <ItemGroup>
