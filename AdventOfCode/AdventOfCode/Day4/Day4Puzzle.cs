@@ -4,23 +4,12 @@ public class Day4Puzzle
 {
     public static int GetScoreOfFirstBoardToWin(IBingoPuzzleInput input)
     {
-        return input.Boards.Select(b => PlayBingoToCompletion(b, input.DrawnNumbers)).OrderBy(g => g.CountOfNumbersDrawnUntilWin).First().GetScore();
+        return input.Boards.Select(b => b.Play(input.DrawnNumbers)).OrderBy(g => g.CountOfNumbersDrawnUntilWin).First().GetScore();
     }
 
     public static int GetScoreOfLastBoardToWin(IBingoPuzzleInput input)
     {
-        return input.Boards.Select(b => PlayBingoToCompletion(b, input.DrawnNumbers)).OrderBy(g => g.CountOfNumbersDrawnUntilWin).Last().GetScore();
-    }
-
-    static BingoGame PlayBingoToCompletion(BingoBoard bingoBoard, IEnumerable<int> numbersToDraw)
-    {
-        var bingoGame = bingoBoard.CreateNewGame();
-
-        foreach (var drawnNumber in numbersToDraw)
-        {
-            bingoGame.MarkDrawnNumber(drawnNumber);
-        }
-        return bingoGame;
+        return input.Boards.Select(b => b.Play(input.DrawnNumbers)).OrderBy(g => g.CountOfNumbersDrawnUntilWin).Last().GetScore();
     }
 }
 
@@ -39,45 +28,55 @@ public class BingoBoard
         _rows = rows;
     }
 
-    public BingoGame CreateNewGame()
+    public BingoGameResult Play(IEnumerable<int> numbersToDraw)
     {
-        return new BingoGame(_rows);
+        var game = new BingoGame(_rows);
+        return game.Play(numbersToDraw);
     }
-
 }
 
 public class BingoGame
 {
-    int _lastNumberDrawn;
     public BingoGame(IEnumerable<IEnumerable<int>> rows)
     {
         Rows = rows.Select(cols => cols.Select(c => new Cell(c)).ToArray()).ToArray();
-        CountOfNumbersDrawnUntilWin = 0;
     }
 
-    public int GetScore()
+    public BingoGameResult Play(IEnumerable<int> numbersToDraw)
     {
-        return Rows.SelectMany(c => c).Where(c => !c.IsMarked).Sum(c => c.Number) * _lastNumberDrawn;
+        var drawnNumbers = numbersToDraw.TakeWhile(number =>
+        {
+            var numberShouldBeDrawn = !HasWon();
+            if (numberShouldBeDrawn)
+                MarkDrawnNumber(number);
+            return numberShouldBeDrawn;
+        }).ToArray();
+
+        return new BingoGameResult(drawnNumbers, this);
     }
 
-    public void MarkDrawnNumber(int drawnNumber)
+    void MarkDrawnNumber(int drawnNumber)
     {
-        if (HasWon()) return;
-
-        _lastNumberDrawn = drawnNumber;
-
         var allCells = Rows.SelectMany(c => c);
         foreach (var cell in allCells.Where(c => c.Number == drawnNumber))
         {
             cell.Mark();
         }
-
-        CountOfNumbersDrawnUntilWin++;
     }
 
-    public int CountOfNumbersDrawnUntilWin { get; private set; }
+    bool HasWon()
+    {
+        var anyRowIsComplete = Rows.Any(r => r.All(cell => cell.IsMarked));
+        var anyColumnIsComplete = Columns.Any(c => c.All(cell => cell.IsMarked));
+        return anyRowIsComplete || anyColumnIsComplete;
+    }
 
-    Cell[][] Rows { get; set; }
+    public int GetSumOfUnmarkedNumber()
+    {
+        return Rows.SelectMany(c => c).Where(c => !c.IsMarked).Sum(c => c.Number);
+    }
+
+    Cell[][] Rows { get; }
 
     Cell[][] Columns
     {
@@ -89,13 +88,6 @@ public class BingoGame
                 return Rows.Select(r => r[index]).ToArray();
             }).ToArray();
         }
-    }
-
-    public bool HasWon()
-    {
-        var anyRowIsComplete = Rows.Any(r => r.All(cell => cell.IsMarked));
-        var anyColumnIsComplete = Columns.Any(c => c.All(cell => cell.IsMarked));
-        return anyRowIsComplete || anyColumnIsComplete;
     }
 
     class Cell
@@ -113,5 +105,24 @@ public class BingoGame
         {
             IsMarked = true;
         }
+    }
+}
+
+public class BingoGameResult
+{
+    readonly int[] _drawnNumbers;
+    readonly BingoGame _bingoGame;
+
+    public BingoGameResult(int[] drawnNumbers, BingoGame bingoGame)
+    {
+        _drawnNumbers = drawnNumbers;
+        _bingoGame = bingoGame;
+    }
+
+    public int CountOfNumbersDrawnUntilWin => _drawnNumbers.Length;
+
+    public int GetScore()
+    {
+        return _bingoGame.GetSumOfUnmarkedNumber() * _drawnNumbers.Last();
     }
 }
