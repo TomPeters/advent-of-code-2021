@@ -4,12 +4,20 @@ public class Day4Puzzle
 {
     public static int GetScoreOfFirstBoardToWin(IBingoPuzzleInput input)
     {
-        return input.Boards.Select(b => b.Play(input.DrawnNumbers)).OrderBy(g => g.CountOfNumbersDrawnUntilWin).First().GetScore();
+        var gameResults = input.Boards.Select(b => b.Play(input.DrawnNumbers));
+        return gameResults
+            .OrderBy(g => g.CountOfNumbersDrawnUntilWin)
+            .First()
+            .GetScore();
     }
 
     public static int GetScoreOfLastBoardToWin(IBingoPuzzleInput input)
     {
-        return input.Boards.Select(b => b.Play(input.DrawnNumbers)).OrderBy(g => g.CountOfNumbersDrawnUntilWin).Last().GetScore();
+        var gameResults = input.Boards.Select(b => b.Play(input.DrawnNumbers));
+        return gameResults
+            .OrderBy(g => g.CountOfNumbersDrawnUntilWin)
+            .Last()
+            .GetScore();
     }
 }
 
