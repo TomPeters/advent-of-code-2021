@@ -10,6 +10,7 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2aa3d3d149cf45e9bde78a1db62128a36e200/39/03594705/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2aa3d3d149cf45e9bde78a1db62128a36e200/b1/af22772b/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/561ced8b57494f62b40e74b63cdb198d94ac00/8d/d68525b2/Number.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/561ced8b57494f62b40e74b63cdb198d94ac00/f5/dc9608fd/Convert.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8d3e5323916f4b8f9e257bca6f03072c6e200/d0/da93051b/Enumerable.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/970ee97813de48cdbe960a187c74dc4094a800/31/0fd2768c/IEnumerable`1.cs" root0="SKIP_HIGHLIGHTING" />
@@ -47,5 +48,24 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/AdventOfCodeTests/Day4/Day4.cs</url>
+          <line>50</line>
+          <properties documentPath="$PROJECT_DIR$/AdventOfCodeTests/Day4/Day4.cs" initialLine="54" containingFunctionPresentation="lambda expression inside property 'Boards'">
+            <startOffsets>
+              <option value="1423" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1425" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
