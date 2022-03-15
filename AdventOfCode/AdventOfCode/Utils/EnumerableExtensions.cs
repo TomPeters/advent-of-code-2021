@@ -20,4 +20,16 @@ public static class EnumerableExtensions
             yield return currentBatch;
         }
     }
+
+    public static IEnumerable<int> BidirectionalRange(int start, int end)
+    {
+        if (start == end)
+        {
+            return new [] { start };
+        }
+
+        return end > start
+            ? Enumerable.Range(start, end - start + 1)
+            : Enumerable.Range(end, start - end + 1).Reverse();
+    }
 }
