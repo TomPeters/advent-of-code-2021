@@ -43,7 +43,7 @@
       <workItem from="1645007727374" duration="2971000" />
       <workItem from="1645759860480" duration="2052000" />
       <workItem from="1647325943651" duration="461000" />
-      <workItem from="1647341465412" duration="2131000" />
+      <workItem from="1647341465412" duration="2666000" />
     </task>
     <servers />
   </component>
@@ -68,19 +68,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/AdventOfCode/Day5/Day5Puzzle.cs</url>
-          <line>14</line>
-          <properties documentPath="$PROJECT_DIR$/AdventOfCode/Day5/Day5Puzzle.cs" initialLine="14" containingFunctionPresentation="method 'NumberOfOverlappingPoints'">
-            <startOffsets>
-              <option value="502" />
-            </startOffsets>
-            <endOffsets>
-              <option value="585" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

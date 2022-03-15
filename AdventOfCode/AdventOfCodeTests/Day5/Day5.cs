@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using AdventOfCode;
+using AdventOfCode.Day5;
 using Xunit;
 
 namespace AdventOfCodeTests.Day5;

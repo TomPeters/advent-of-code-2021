@@ -1,12 +1,12 @@
 using AdventOfCode.Utils;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Day5;
 
-public class Day5Puzzle
+public static class Day5Puzzle
 {
     public static int NumberOfOverlappingPointsExcludingDiagonals(IEnumerable<Line> ventLines)
     {
-        return NumberOfOverlappingPoints(ventLines.Where(l => l.IsHorizontalLine() || l.IsVerticalLine()));
+        return NumberOfOverlappingPoints(ventLines.Where(l => !l.IsDiagonal()));
     }
 
     public static int NumberOfOverlappingPoints(IEnumerable<Line> ventLines)
@@ -25,35 +25,23 @@ public class Line
         _lineEndpoints = lineEndpoints;
     }
 
-    public bool IsHorizontalLine()
-    {
-        return _lineEndpoints.Start.Y == _lineEndpoints.End.Y;
-    }
-
-    public bool IsVerticalLine()
-    {
-        return _lineEndpoints.Start.X == _lineEndpoints.End.X;
-    }
+    public bool IsDiagonal() => !IsHorizontalLine() && !IsVerticalLine();
+    bool IsHorizontalLine() => _lineEndpoints.Start.Y == _lineEndpoints.End.Y;
+    bool IsVerticalLine() => _lineEndpoints.Start.X == _lineEndpoints.End.X;
 
     public IEnumerable<Coordinate> GetAllCoordinatesAlongLine()
     {
-        if (IsHorizontalLine() || IsVerticalLine())
+        if (IsDiagonal())
         {
-            foreach (var x in EnumerableExtensions.BidirectionalRange(_lineEndpoints.Start.X, _lineEndpoints.End.X))
-            {
-                foreach (var y in EnumerableExtensions.BidirectionalRange(_lineEndpoints.Start.Y, _lineEndpoints.End.Y))
-                {
-                    yield return new Coordinate(x, y);
-                }
-            }
+            // This uses the property that the size of the X and Y ranges are identical because the lines are at 45 degrees
+            // Because we know the ranges are identical, we can zip them #hackz
+            return EnumerableExtensions.BidirectionalRange(_lineEndpoints.Start.X, _lineEndpoints.End.X)
+                .Zip(EnumerableExtensions.BidirectionalRange(_lineEndpoints.Start.Y, _lineEndpoints.End.Y))
+                .Select(xAndY => new Coordinate(xAndY.First, xAndY.Second));
         }
-        else
-        {
-            foreach (var coordinate in EnumerableExtensions.BidirectionalRange(_lineEndpoints.Start.X, _lineEndpoints.End.X)
-                         .Zip(EnumerableExtensions.BidirectionalRange(_lineEndpoints.Start.Y, _lineEndpoints.End.Y))
-                         .Select(tuple => new Coordinate(tuple.First, tuple.Second)))
-                yield return coordinate;
-        }
+
+        return EnumerableExtensions.BidirectionalRange(_lineEndpoints.Start.X, _lineEndpoints.End.X)
+            .SelectMany(x => EnumerableExtensions.BidirectionalRange(_lineEndpoints.Start.Y, _lineEndpoints.End.Y).Select(y => new Coordinate(x, y)));
     }
 }
 
