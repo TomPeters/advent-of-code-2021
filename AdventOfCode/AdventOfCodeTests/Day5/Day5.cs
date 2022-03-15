@@ -29,7 +29,7 @@ public class Day5
     [Fact]
     public void Part2WorksForRealData()
     {
-        Assert.Equal(5835, Day5Puzzle.NumberOfOverlappingPoints(RealData));
+        Assert.Equal(17013, Day5Puzzle.NumberOfOverlappingPoints(RealData));
     }
 
     static IEnumerable<Line> RealData => ConvertInputToLines(FileHelper.ReadFromFile("Day5", "VentLines.txt").Split("\n"));

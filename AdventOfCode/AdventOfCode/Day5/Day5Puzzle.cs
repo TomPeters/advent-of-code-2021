@@ -37,12 +37,22 @@ public class Line
 
     public IEnumerable<Coordinate> GetAllCoordinatesAlongLine()
     {
-        foreach (var x in EnumerableExtensions.BidirectionalRange(_lineEndpoints.Start.X, _lineEndpoints.End.X))
+        if (IsHorizontalLine() || IsVerticalLine())
         {
-            foreach (var y in EnumerableExtensions.BidirectionalRange(_lineEndpoints.Start.Y, _lineEndpoints.End.Y))
+            foreach (var x in EnumerableExtensions.BidirectionalRange(_lineEndpoints.Start.X, _lineEndpoints.End.X))
             {
-                yield return new Coordinate(x, y);
+                foreach (var y in EnumerableExtensions.BidirectionalRange(_lineEndpoints.Start.Y, _lineEndpoints.End.Y))
+                {
+                    yield return new Coordinate(x, y);
+                }
             }
+        }
+        else
+        {
+            foreach (var coordinate in EnumerableExtensions.BidirectionalRange(_lineEndpoints.Start.X, _lineEndpoints.End.X)
+                         .Zip(EnumerableExtensions.BidirectionalRange(_lineEndpoints.Start.Y, _lineEndpoints.End.Y))
+                         .Select(tuple => new Coordinate(tuple.First, tuple.Second)))
+                yield return coordinate;
         }
     }
 }

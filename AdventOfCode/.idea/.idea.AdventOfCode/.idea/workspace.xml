@@ -12,6 +12,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2aa3d3d149cf45e9bde78a1db62128a36e200/b1/af22772b/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/561ced8b57494f62b40e74b63cdb198d94ac00/8d/d68525b2/Number.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/561ced8b57494f62b40e74b63cdb198d94ac00/f5/dc9608fd/Convert.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8517f607c12a4b508364c3f896f0fe6f11da8/d0/2f518e71/Assert.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8d3e5323916f4b8f9e257bca6f03072c6e200/d0/da93051b/Enumerable.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/970ee97813de48cdbe960a187c74dc4094a800/31/0fd2768c/IEnumerable`1.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
@@ -42,7 +43,7 @@
       <workItem from="1645007727374" duration="2971000" />
       <workItem from="1645759860480" duration="2052000" />
       <workItem from="1647325943651" duration="461000" />
-      <workItem from="1647341465412" duration="1635000" />
+      <workItem from="1647341465412" duration="2131000" />
     </task>
     <servers />
   </component>
@@ -67,6 +68,19 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/AdventOfCode/Day5/Day5Puzzle.cs</url>
+          <line>14</line>
+          <properties documentPath="$PROJECT_DIR$/AdventOfCode/Day5/Day5Puzzle.cs" initialLine="14" containingFunctionPresentation="method 'NumberOfOverlappingPoints'">
+            <startOffsets>
+              <option value="502" />
+            </startOffsets>
+            <endOffsets>
+              <option value="585" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
