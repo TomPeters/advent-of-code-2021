@@ -60,6 +60,7 @@ public class BingoGame
             return numberShouldBeDrawn;
         }).ToArray();
 
+        // Assume we've won by this point. This happens to be true for all of the sample data but might not be true in the more general case
         return new BingoGameResult(drawnNumbers, this);
     }
 
@@ -74,9 +75,8 @@ public class BingoGame
 
     bool HasWon()
     {
-        var anyRowIsComplete = Rows.Any(r => r.All(cell => cell.IsMarked));
-        var anyColumnIsComplete = Columns.Any(c => c.All(cell => cell.IsMarked));
-        return anyRowIsComplete || anyColumnIsComplete;
+        return Rows.Concat(Columns)
+            .Any(rowOrColumn => rowOrColumn.All(cell => cell.IsMarked));
     }
 
     public int GetSumOfUnmarkedNumber()
