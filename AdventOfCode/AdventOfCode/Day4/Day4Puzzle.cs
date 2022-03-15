@@ -2,9 +2,14 @@ namespace AdventOfCode.Day4;
 
 public class Day4Puzzle
 {
-    public static int GetScoreOfWinningBoard(IBingoPuzzleInput input)
+    public static int GetScoreOfFirstBoardToWin(IBingoPuzzleInput input)
     {
         return input.Boards.Select(b => PlayBingoToCompletion(b, input.DrawnNumbers)).OrderBy(g => g.CountOfNumbersDrawnUntilWin).First().GetScore();
+    }
+
+    public static int GetScoreOfLastBoardToWin(IBingoPuzzleInput input)
+    {
+        return input.Boards.Select(b => PlayBingoToCompletion(b, input.DrawnNumbers)).OrderBy(g => g.CountOfNumbersDrawnUntilWin).Last().GetScore();
     }
 
     static BingoGame PlayBingoToCompletion(BingoBoard bingoBoard, IEnumerable<int> numbersToDraw)

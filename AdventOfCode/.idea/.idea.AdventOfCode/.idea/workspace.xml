@@ -54,13 +54,13 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/AdventOfCodeTests/Day4/Day4.cs</url>
-          <line>50</line>
+          <line>62</line>
           <properties documentPath="$PROJECT_DIR$/AdventOfCodeTests/Day4/Day4.cs" initialLine="54" containingFunctionPresentation="lambda expression inside property 'Boards'">
             <startOffsets>
-              <option value="1423" />
+              <option value="1712" />
             </startOffsets>
             <endOffsets>
-              <option value="1425" />
+              <option value="1714" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="1" />

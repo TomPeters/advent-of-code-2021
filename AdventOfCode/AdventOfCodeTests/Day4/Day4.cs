@@ -12,13 +12,25 @@ public class Day4
     [Fact]
     public void Part1WorksForSampleData()
     {
-        Assert.Equal(4512, Day4Puzzle.GetScoreOfWinningBoard(SampleData));
+        Assert.Equal(4512, Day4Puzzle.GetScoreOfFirstBoardToWin(SampleData));
     }
 
     [Fact]
     public void Part1WorksForRealData()
     {
-        Assert.Equal(10374, Day4Puzzle.GetScoreOfWinningBoard(RealData));
+        Assert.Equal(10374, Day4Puzzle.GetScoreOfFirstBoardToWin(RealData));
+    }
+
+    [Fact]
+    public void Part2WorksForSampleData()
+    {
+        Assert.Equal(1924, Day4Puzzle.GetScoreOfLastBoardToWin(SampleData));
+    }
+
+    [Fact]
+    public void Part2WorksForRealData()
+    {
+        Assert.Equal(24742, Day4Puzzle.GetScoreOfLastBoardToWin(RealData));
     }
 
     static IBingoPuzzleInput RealData => new Day4Input(FileHelper.ReadFromFile("Day4", "RealBingoData.txt").Split("\n"));
