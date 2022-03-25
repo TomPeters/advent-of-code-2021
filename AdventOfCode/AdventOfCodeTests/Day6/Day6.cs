@@ -22,10 +22,10 @@ public class Day6
     [Fact]
     public void Part1WorksForRealDataFor80Days()
     {
-        Assert.Equal(0, Day6Puzzle.NumberOfLanternFishAfterDays(RealData, 80));
+        Assert.Equal(391888, Day6Puzzle.NumberOfLanternFishAfterDays(RealData, 80));
     }
 
-    static IEnumerable<int> RealData => FileHelper.ReadFromFile("Day5", "VentLines.txt").Split(",").Select(int.Parse);
+    static IEnumerable<int> RealData => FileHelper.ReadFromFile("Day6", "LanternfishInitialTimers.txt").Split(",").Select(int.Parse);
 
     static IEnumerable<int> SampleData => new [] {3,4,3,1,2};
 }
