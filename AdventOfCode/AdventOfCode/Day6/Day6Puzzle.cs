@@ -2,37 +2,48 @@ namespace AdventOfCode.Day6;
 
 public static class Day6Puzzle
 {
-    public static int NumberOfLanternFishAfterDays(IEnumerable<int> initialLanternFishInternalTimers, int numberOfDays)
+    public static long NumberOfLanternFishAfterDays(IEnumerable<int> initialLanternFishInternalTimers, int numberOfDays)
     {
-        var initialLanternFish = initialLanternFishInternalTimers.Select(t => new LanternFish(t));
-        var finalLanternFish = Enumerable.Range(0, numberOfDays).Aggregate(initialLanternFish, (lanternFish, _) =>
+        var initialLanternFish = initialLanternFishInternalTimers.Select(t => new SynchronisedLanternFishGroup(1, t));
+        var groupedInitialLanternFish = SynchronisedLanternFishGroup.GroupFishWithSameTimers(initialLanternFish);
+        var finalLanternFishGroups = Enumerable.Range(0, numberOfDays).Aggregate(groupedInitialLanternFish, (lanternFishGroups, _) =>
         {
-            return lanternFish.SelectMany(l => l.LanternFishOnNextDay());
+            var lanternFishGroupsOnNextDay = lanternFishGroups.SelectMany(g => g.LanternFishGroupsOnNextDay());
+            return SynchronisedLanternFishGroup.GroupFishWithSameTimers(lanternFishGroupsOnNextDay);
         });
-        return finalLanternFish.Count();
+        return finalLanternFishGroups.Sum(g => g.NumberOfFishInGroup);
     }
 }
 
-class LanternFish
+class SynchronisedLanternFishGroup
 {
+    public long NumberOfFishInGroup { get; }
     readonly int _internalTimer;
 
-    public LanternFish(int internalTimer)
+    public SynchronisedLanternFishGroup(long numberOfFishInGroup, int internalTimer)
     {
+        NumberOfFishInGroup = numberOfFishInGroup;
         _internalTimer = internalTimer;
     }
 
-    public IEnumerable<LanternFish> LanternFishOnNextDay()
+    public IEnumerable<SynchronisedLanternFishGroup> LanternFishGroupsOnNextDay()
     {
         if (_internalTimer == 0)
         {
             return new[]
             {
-                new LanternFish(6),
-                new LanternFish(8)
+                new SynchronisedLanternFishGroup(NumberOfFishInGroup, 6),
+                new SynchronisedLanternFishGroup(NumberOfFishInGroup, 8)
             };
         }
 
-        return new[] { new LanternFish(_internalTimer - 1) };
+        return new[] { new SynchronisedLanternFishGroup(NumberOfFishInGroup, _internalTimer - 1) };
+    }
+
+    public static IEnumerable<SynchronisedLanternFishGroup> GroupFishWithSameTimers(
+        IEnumerable<SynchronisedLanternFishGroup> fishGroups)
+    {
+        return fishGroups.GroupBy(g => g._internalTimer).Select(groupOfGroups =>
+            new SynchronisedLanternFishGroup(groupOfGroups.Sum(group => group.NumberOfFishInGroup), groupOfGroups.Key));
     }
 }
