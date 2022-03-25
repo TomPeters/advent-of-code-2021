@@ -35,6 +35,8 @@
       <EmbeddedResource Include="Day5\SampleData.txt" />
       <None Remove="Day5\VentLines.txt" />
       <EmbeddedResource Include="Day5\VentLines.txt" />
+      <None Remove="Day6\LanternfishInitialTimers.txt" />
+      <EmbeddedResource Include="Day6\LanternfishInitialTimers.txt" />
     </ItemGroup>
 
     <ItemGroup>
