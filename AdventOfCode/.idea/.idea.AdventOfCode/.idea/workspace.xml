@@ -32,6 +32,7 @@
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
+  <component name="RunManager" selected="f7a52b99-5a6b-4342-9ad6-968de849467d" />
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -44,7 +45,7 @@
       <workItem from="1645759860480" duration="2052000" />
       <workItem from="1647325943651" duration="461000" />
       <workItem from="1647341465412" duration="2913000" />
-      <workItem from="1649818426926" duration="165000" />
+      <workItem from="1649818426926" duration="1322000" />
     </task>
     <servers />
   </component>
