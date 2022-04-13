@@ -32,4 +32,11 @@ public static class EnumerableExtensions
             ? Enumerable.Range(start, end - start + 1)
             : Enumerable.Range(end, start - end + 1).Reverse();
     }
+
+    public static int Pow(this int bas, int exp)
+    {
+        return Enumerable
+            .Repeat(bas, exp)
+            .Aggregate(1, (a, b) => a * b);
+    }
 }

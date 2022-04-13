@@ -10,14 +10,27 @@ public class Day8
     [Fact]
     public void Part1WorksForSampleData()
     {
-        Assert.Equal(26, Day8Puzzle.SolvePuzzlePart1(SampleData));
+        Assert.Equal(26, Day8Puzzle.NumberOfOutputDigitsThatAreUniquelyIdentifiableBySignalCount(SampleData));
     }
 
     [Fact]
     public void Part1WorksForRealData()
     {
-        Assert.Equal(247, Day8Puzzle.SolvePuzzlePart1(RealData));
+        Assert.Equal(247, Day8Puzzle.NumberOfOutputDigitsThatAreUniquelyIdentifiableBySignalCount(RealData));
     }
+
+    [Fact]
+    public void Part2WorksForSampleData()
+    {
+        Assert.Equal(26, Day8Puzzle.SumOfOutputDigits(SampleData));
+    }
+
+    [Fact]
+    public void Part2WorksForRealData()
+    {
+        Assert.Equal(247, Day8Puzzle.SumOfOutputDigits(RealData));
+    }
+
 
     static IEnumerable<Entry> RealData => GetEntries(FileHelper.ReadFromFile("Day8", "SignalPatterns.txt"));
 
