@@ -13,7 +13,7 @@ public static class Day8Puzzle
     {
         return entries.Sum(e =>
         {
-            var mapping = e.GetSignalWireMapping();
+            var mapping = e.UniqueSignalPatterns.GetSignalWireMapping();
             return e.FourDigitOutputValue.ConvertToNumber(mapping);
         });
     }
@@ -35,8 +35,82 @@ public class SignalPattern
 
     public bool IsNumberWithUniqueNumberOfSegments()
     {
-        var numberOfSegments = _signalWires.Length;
-        return new[] { 2, 3, 4, 7 }.Contains(numberOfSegments);
+        return Is1() || Is4() || Is7() || Is8();
+    }
+
+    public bool Is1()
+    {
+        return _signalWires.Length == 2;
+    }
+
+    public bool Is2(SignalWire mapsToE)
+    {
+        return _signalWires.Length == 5 && _signalWires.Contains(mapsToE);
+    }
+
+    public bool Is4()
+    {
+        return _signalWires.Length == 4;
+    }
+
+    public bool Is7()
+    {
+        return _signalWires.Length == 3;
+    }
+
+    public bool Is8()
+    {
+        return _signalWires.Length == 7;
+    }
+
+    public bool Is0Or6Or9()
+    {
+        return _signalWires.Length == 6;
+    }
+
+    public bool Is2Or3Or5()
+    {
+        return _signalWires.Length == 5;
+    }
+
+    public bool Is9(SignalPattern patternFor4)
+    {
+        return Is0Or6Or9() && patternFor4.IsContainedWithin(this);
+    }
+
+    public bool Is5(SignalWire mapsToC)
+    {
+        return Is2Or3Or5() && !ContainsSignal(mapsToC);
+    }
+
+    public bool Is3(SignalWire mapsToC, SignalWire mapsToE)
+    {
+        return Is2Or3Or5() && !Is5(mapsToC) && !Is2(mapsToE);
+    }
+
+    public SignalWire[] DifferenceBetween(SignalPattern otherPattern)
+    {
+        return _signalWires.Except(otherPattern._signalWires).ToArray();
+    }
+    
+    public bool IsContainedWithin(SignalPattern otherPattern)
+    {
+        return _signalWires.All(otherPattern._signalWires.Contains);
+    }
+
+    public SignalWire[] MissingSignals()
+    {
+        return Enum.GetValues<SignalWire>().Except(_signalWires).ToArray();
+    }
+
+    public SignalWire[] SignalsExcept(IEnumerable<SignalWire> signals)
+    {
+        return _signalWires.Except(signals).ToArray();
+    }
+
+    public bool ContainsSignal(SignalWire signal)
+    {
+        return _signalWires.Contains(signal);
     }
 }
 
@@ -54,18 +128,18 @@ public enum SignalWire
 public class SignalWireMapping
 {
     readonly IDictionary<SignalWire, SignalWire> _mapping;
-    static readonly IDictionary<IEnumerable<SignalWire>, int> NumberToWireMappings = new Dictionary<IEnumerable<SignalWire>, int>()
+    static readonly IDictionary<ISet<SignalWire>, int> NumberToWireMappings = new Dictionary<ISet<SignalWire>, int>()
     {
-        {new [] { SignalWire.a, SignalWire.b, SignalWire.c, SignalWire.e, SignalWire.f, SignalWire.g}, 0},
-        {new [] { SignalWire.c, SignalWire.f }, 1},
-        {new [] { SignalWire.a, SignalWire.c, SignalWire.d, SignalWire.e, SignalWire.g}, 2},
-        {new [] { SignalWire.a, SignalWire.c, SignalWire.d, SignalWire.f, SignalWire.g}, 3},
-        {new [] { SignalWire.b, SignalWire.c, SignalWire.d, SignalWire.f }, 4},
-        {new [] { SignalWire.a, SignalWire.b, SignalWire.d, SignalWire.f, SignalWire.g}, 5},
-        {new [] { SignalWire.a, SignalWire.b, SignalWire.d, SignalWire.e, SignalWire.f, SignalWire.g}, 6},
-        {new [] { SignalWire.a, SignalWire.c, SignalWire.f }, 7},
-        {new [] { SignalWire.a, SignalWire.b, SignalWire.c, SignalWire.d, SignalWire.e, SignalWire.f, SignalWire.g}, 8},
-        {new [] { SignalWire.a, SignalWire.b, SignalWire.c, SignalWire.d, SignalWire.f, SignalWire.g}, 9}
+        {new HashSet<SignalWire> { SignalWire.a, SignalWire.b, SignalWire.c, SignalWire.e, SignalWire.f, SignalWire.g}, 0},
+        {new HashSet<SignalWire> { SignalWire.c, SignalWire.f }, 1},
+        {new HashSet<SignalWire> { SignalWire.a, SignalWire.c, SignalWire.d, SignalWire.e, SignalWire.g}, 2},
+        {new HashSet<SignalWire> { SignalWire.a, SignalWire.c, SignalWire.d, SignalWire.f, SignalWire.g}, 3},
+        {new HashSet<SignalWire> { SignalWire.b, SignalWire.c, SignalWire.d, SignalWire.f }, 4},
+        {new HashSet<SignalWire> { SignalWire.a, SignalWire.b, SignalWire.d, SignalWire.f, SignalWire.g}, 5},
+        {new HashSet<SignalWire> { SignalWire.a, SignalWire.b, SignalWire.d, SignalWire.e, SignalWire.f, SignalWire.g}, 6},
+        {new HashSet<SignalWire> { SignalWire.a, SignalWire.c, SignalWire.f }, 7},
+        {new HashSet<SignalWire> { SignalWire.a, SignalWire.b, SignalWire.c, SignalWire.d, SignalWire.e, SignalWire.f, SignalWire.g}, 8},
+        {new HashSet<SignalWire> { SignalWire.a, SignalWire.b, SignalWire.c, SignalWire.d, SignalWire.f, SignalWire.g}, 9}
     };
 
     public SignalWireMapping(SignalWire mapsToA, SignalWire mapsToB, SignalWire mapsToC, SignalWire mapsToD, SignalWire mapsToE, SignalWire mapsToF, SignalWire mapsToG)
@@ -85,53 +159,99 @@ public class SignalWireMapping
     public int GetDigit(IEnumerable<SignalWire> mixedUpWires)
     {
         var intendedWires = mixedUpWires.Select(w => _mapping[w]).ToArray();
-        return NumberToWireMappings.Single(w => !w.Key.Except(intendedWires).Any()).Value;
+        return NumberToWireMappings.Single(w => w.Key.SetEquals(intendedWires)).Value;
     }
 }
 
 public class Entry
 {
-    public Entry(IEnumerable<SignalPattern> uniqueSignalPatterns, FourDigitOutputValue fourDigitOutputValue)
+    public Entry(UniqueSignalPatterns uniqueSignalPatterns, FourDigitOutputValue fourDigitOutputValue)
     {
-        UniqueSignalPatterns = uniqueSignalPatterns.ToList();
+        UniqueSignalPatterns = uniqueSignalPatterns;
         FourDigitOutputValue = fourDigitOutputValue;
+    }
+
+    public UniqueSignalPatterns UniqueSignalPatterns { get; }
+    public FourDigitOutputValue FourDigitOutputValue { get; }
+}
+
+public class UniqueSignalPatterns
+{
+    readonly IEnumerable<SignalPattern> _patterns;
+
+    public UniqueSignalPatterns(IEnumerable<SignalPattern> patterns)
+    {
+        _patterns = patterns;
     }
 
     public SignalWireMapping GetSignalWireMapping()
     {
-        // 1 - 2
-        // 7 - 3
+        var mapsToA = GetMappingForA();
+        var mapsToE = GetMappingForE();
+        var mapsToF = GetMappingForF(mapsToE);
+        var mapsToC = GetMappingForC(mapsToF);
+        var mapsToB = GetMappingForB(mapsToC, mapsToE);
+        var mapsToD = GetMappingForD(mapsToB);
+        var mapsToG = GetMappingForG(mapsToA, mapsToC, mapsToD, mapsToE);
 
-        // 4 - 4
-
-        // 2 - 5
-        // 3 - 5
-        // 5 - 5
-
-        // 0 - 6
-        // 6 - 6
-        // 9 - 6
-
-        // disregard 8, it gives us no information
-        // 8 - 7
-
-        // Find 1 and 7. This gives us the "a" position
-        // Find the "6" digited number that completely overlaps with 4 - this gives us 9. The missing signal from 9 gives us the "e" position
-        // Finding the "5" digited number that contains "e" - this gives us 2.
-        // from 2, work out which signal from 1 is missing from 2 - this gives us "f"
-        // The signal from 1 that isn't "f" gives us "c"
-        // we now have "a", "e", "f", "c"
-        // Find the 5 digited number that doesn't contain "c" - this is 5, and the remaining 5 digited number is 3.
-        // The signal in 5 that isn't in 3 is "b".
-        // The signal in 4 that isn't "b" and isn't in "1" is "d"
-        // The remaining signal is "g".
-
-        // alternative
-        // the signal from the 5 digited numbers that has 4 overlapping digits with the other 5 digited numbers is 3. The difference between this signal and 4 is "b".
+        return new SignalWireMapping(mapsToA, mapsToB, mapsToC, mapsToD, mapsToE, mapsToF, mapsToG);
     }
 
-    public List<SignalPattern> UniqueSignalPatterns { get; }
-    public FourDigitOutputValue FourDigitOutputValue { get; }
+    SignalWire GetMappingForG(SignalWire mapsToA, SignalWire mapsToC, SignalWire mapsToD, SignalWire mapsToE)
+    {
+        var patternFor2 = GetPatternWhere(p => p.Is2(mapsToE));
+        return patternFor2.SignalsExcept(new[] { mapsToA, mapsToC, mapsToD, mapsToE }).Single();
+    }
+
+    SignalWire GetMappingForD(SignalWire mapsToB)
+    {
+        var patternFor1 = GetPatternWhere(s => s.Is1());
+        var patternFor4 = GetPatternWhere(s => s.Is4());
+        var mapsToD = patternFor4.DifferenceBetween(patternFor1).Except(new[] { mapsToB }).Single();
+        return mapsToD;
+    }
+
+    SignalWire GetMappingForB(SignalWire mapsToC, SignalWire mapsToE)
+    {
+        var patternFor5 = GetPatternWhere(s => s.Is5(mapsToC));
+        var patternFor3 = GetPatternWhere(s => s.Is3(mapsToC, mapsToE));
+        var mapsToB = patternFor5.DifferenceBetween(patternFor3).Single();
+        return mapsToB;
+    }
+
+    SignalWire GetMappingForC(SignalWire mapsToF)
+    {
+        return GetPatternWhere(s => s.Is1()).SignalsExcept(new [] { mapsToF }).Single();
+    }
+
+    SignalWire GetMappingForF(SignalWire mapsToE)
+    {
+        var patternFor1 = GetPatternWhere(s => s.Is1());
+        var patternFor2 = GetPatternWhere(s => s.Is2(mapsToE));
+        var mapsToF = patternFor1.DifferenceBetween(patternFor2).Single();
+        return mapsToF;
+    }
+
+    SignalWire GetMappingForE()
+    {
+        var patternFor4 = GetPatternWhere(p => p.Is4());
+        var patternFor9 = GetPatternWhere(p => p.Is9(patternFor4));
+
+        return patternFor9.MissingSignals().Single();
+    }
+
+    SignalWire GetMappingForA()
+    {
+        var patternFor1 = GetPatternWhere(p => p.Is1());
+        var patternFor7 = GetPatternWhere(p => p.Is7());
+
+        return patternFor7.DifferenceBetween(patternFor1).Single();
+    }
+
+    SignalPattern GetPatternWhere(Predicate<SignalPattern> matches)
+    {
+        return _patterns.First(p => matches(p));
+    }
 }
 
 public class FourDigitOutputValue

@@ -22,15 +22,14 @@ public class Day8
     [Fact]
     public void Part2WorksForSampleData()
     {
-        Assert.Equal(26, Day8Puzzle.SumOfOutputDigits(SampleData));
+        Assert.Equal(61229, Day8Puzzle.SumOfOutputDigits(SampleData));
     }
 
     [Fact]
     public void Part2WorksForRealData()
     {
-        Assert.Equal(247, Day8Puzzle.SumOfOutputDigits(RealData));
+        Assert.Equal(933305, Day8Puzzle.SumOfOutputDigits(RealData));
     }
-
 
     static IEnumerable<Entry> RealData => GetEntries(FileHelper.ReadFromFile("Day8", "SignalPatterns.txt"));
 
@@ -52,7 +51,7 @@ gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
             var parts = entryString.Split("|");
             var uniqueSignalPatterns = ParseSignalPatternsFromSection(parts[0]);
             var fourSignalOutputValue = ParseSignalPatternsFromSection(parts[1]);
-            return new Entry(uniqueSignalPatterns, new FourDigitOutputValue(fourSignalOutputValue));
+            return new Entry(new UniqueSignalPatterns(uniqueSignalPatterns), new FourDigitOutputValue(fourSignalOutputValue));
         });
     }
 
