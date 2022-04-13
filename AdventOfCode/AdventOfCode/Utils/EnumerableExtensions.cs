@@ -39,4 +39,14 @@ public static class EnumerableExtensions
             .Repeat(bas, exp)
             .Aggregate(1, (a, b) => a * b);
     }
+
+    public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
+    {
+        foreach (var item in source) action(item);
+    }
+
+    public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> source)
+    {
+        return source.SelectMany(t => t);
+    }
 }
