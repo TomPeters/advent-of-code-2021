@@ -19,6 +19,18 @@ public class Day9
         Assert.Equal(436, Day9Puzzle.GetSumOfRiskLevelsOfLowPoints(RealData));
     }
 
+    [Fact]
+    public void Part2WorksForSampleData()
+    {
+        Assert.Equal(1134, Day9Puzzle.GetProductOfThreeLargestBasins(SampleData));
+    }
+
+    [Fact]
+    public void Part2WorksForRealData()
+    {
+        Assert.Equal(1317792, Day9Puzzle.GetProductOfThreeLargestBasins(RealData));
+    }
+
     static HeightMap RealData => ConvertToHeightMap(FileHelper.ReadFromFile("Day9", "HeightMap.txt"));
 
     static HeightMap SampleData => ConvertToHeightMap(@"2199943210

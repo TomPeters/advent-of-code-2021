@@ -13,6 +13,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2aa3d3d149cf45e9bde78a1db62128a36e200/39/03594705/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8517f607c12a4b508364c3f896f0fe6f11da8/d0/2f518e71/Assert.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/970ee97813de48cdbe960a187c74dc4094a800/31/0fd2768c/IEnumerable`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/561ced8b57494f62b40e74b63cdb198d94ac00/f9/dc8e2758/Object.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2aa3d3d149cf45e9bde78a1db62128a36e200/b1/af22772b/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8d3e5323916f4b8f9e257bca6f03072c6e200/d0/da93051b/Enumerable.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/561ced8b57494f62b40e74b63cdb198d94ac00/f5/dc9608fd/Convert.cs" root0="SKIP_HIGHLIGHTING" />
@@ -48,7 +49,7 @@
       <workItem from="1647325943651" duration="461000" />
       <workItem from="1647341465412" duration="2913000" />
       <workItem from="1649818426926" duration="1648000" />
-      <workItem from="1649842491062" duration="8275000" />
+      <workItem from="1649842491062" duration="10199000" />
     </task>
     <servers />
   </component>
