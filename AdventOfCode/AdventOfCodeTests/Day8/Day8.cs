@@ -10,13 +10,13 @@ public class Day8
     [Fact]
     public void Part1WorksForSampleData()
     {
-        Assert.Equal(26, Day8Puzzle.SolvePuzzle(SampleData));
+        Assert.Equal(26, Day8Puzzle.SolvePuzzlePart1(SampleData));
     }
 
     [Fact]
     public void Part1WorksForRealData()
     {
-        Assert.Equal(1, Day8Puzzle.SolvePuzzle(RealData));
+        Assert.Equal(247, Day8Puzzle.SolvePuzzlePart1(RealData));
     }
 
     static IEnumerable<Entry> RealData => GetEntries(FileHelper.ReadFromFile("Day8", "SignalPatterns.txt"));
@@ -45,6 +45,9 @@ gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
 
     static IEnumerable<SignalPattern> ParseSignalPatternsFromSection(string input)
     {
-        return input.Split(" ").Select(signalPatternString => new SignalPattern(signalPatternString.Trim()));
+        return input.Split(" ")
+            .Select(sp => sp.Trim())
+            .Where(sp => sp != string.Empty)
+            .Select(sp => new SignalPattern(sp));
     }
 }

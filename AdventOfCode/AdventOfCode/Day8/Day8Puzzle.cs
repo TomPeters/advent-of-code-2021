@@ -2,16 +2,25 @@ namespace AdventOfCode.Day8;
 
 public static class Day8Puzzle
 {
-    public static int SolvePuzzle(IEnumerable<Entry> entries)
+    public static int SolvePuzzlePart1(IEnumerable<Entry> entries)
     {
-        return 0;
+        return entries.SelectMany(e => e.FourDigitOutputValue.FourSignalPatterns).Count(p => p.IsNumberWithUniqueNumberOfSegments());
     }
 }
 
 public class SignalPattern
 {
+    readonly string _signals;
+
     public SignalPattern(string signals)
     {
+        _signals = signals;
+    }
+
+    public bool IsNumberWithUniqueNumberOfSegments()
+    {
+        var numberOfSegments = _signals.Length;
+        return new[] { 2, 3, 4, 7 }.Contains(numberOfSegments);
     }
 }
 
