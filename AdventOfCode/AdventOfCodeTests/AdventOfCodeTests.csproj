@@ -23,6 +23,7 @@
     <ItemGroup>
       <EmbeddedResource Include="Day7\HorizontalPositions.txt" />
       <EmbeddedResource Include="Day8\SignalPatterns.txt" />
+      <EmbeddedResource Include="Day9\HeightMap.txt" />
       <None Remove="Day1\Measurements.txt" />
       <EmbeddedResource Include="Day1\Measurements.txt" />
       <None Remove="Day2\Commands.txt" />
