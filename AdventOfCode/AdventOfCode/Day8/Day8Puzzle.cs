@@ -21,27 +21,73 @@ public static class Day8Puzzle
 
 public class SignalPattern
 {
-    readonly string _signals;
+    readonly SignalWire[] _signalWires;
 
-    public SignalPattern(string signals)
+    public SignalPattern(string signalWires)
     {
-        _signals = signals;
+        _signalWires = signalWires.Select(c => Enum.Parse<SignalWire>(c.ToString())).ToArray();
     }
 
     public int ConvertToNumber(SignalWireMapping mapping)
     {
-        // TODO
-        return 0;
+        return mapping.GetDigit(_signalWires);
     }
 
     public bool IsNumberWithUniqueNumberOfSegments()
     {
-        var numberOfSegments = _signals.Length;
+        var numberOfSegments = _signalWires.Length;
         return new[] { 2, 3, 4, 7 }.Contains(numberOfSegments);
     }
 }
 
-public class SignalWireMapping {}
+public enum SignalWire
+{
+    a,
+    b,
+    c,
+    d,
+    e,
+    f,
+    g
+}
+
+public class SignalWireMapping
+{
+    readonly IDictionary<SignalWire, SignalWire> _mapping;
+    static readonly IDictionary<IEnumerable<SignalWire>, int> NumberToWireMappings = new Dictionary<IEnumerable<SignalWire>, int>()
+    {
+        {new [] { SignalWire.a, SignalWire.b, SignalWire.c, SignalWire.e, SignalWire.f, SignalWire.g}, 0},
+        {new [] { SignalWire.c, SignalWire.f }, 1},
+        {new [] { SignalWire.a, SignalWire.c, SignalWire.d, SignalWire.e, SignalWire.g}, 2},
+        {new [] { SignalWire.a, SignalWire.c, SignalWire.d, SignalWire.f, SignalWire.g}, 3},
+        {new [] { SignalWire.b, SignalWire.c, SignalWire.d, SignalWire.f }, 4},
+        {new [] { SignalWire.a, SignalWire.b, SignalWire.d, SignalWire.f, SignalWire.g}, 5},
+        {new [] { SignalWire.a, SignalWire.b, SignalWire.d, SignalWire.e, SignalWire.f, SignalWire.g}, 6},
+        {new [] { SignalWire.a, SignalWire.c, SignalWire.f }, 7},
+        {new [] { SignalWire.a, SignalWire.b, SignalWire.c, SignalWire.d, SignalWire.e, SignalWire.f, SignalWire.g}, 8},
+        {new [] { SignalWire.a, SignalWire.b, SignalWire.c, SignalWire.d, SignalWire.f, SignalWire.g}, 9}
+    };
+
+    public SignalWireMapping(SignalWire mapsToA, SignalWire mapsToB, SignalWire mapsToC, SignalWire mapsToD, SignalWire mapsToE, SignalWire mapsToF, SignalWire mapsToG)
+    {
+        _mapping = new Dictionary<SignalWire, SignalWire>()
+        {
+            { mapsToA, SignalWire.a },
+            { mapsToB, SignalWire.b },
+            { mapsToC, SignalWire.c },
+            { mapsToD, SignalWire.d },
+            { mapsToE, SignalWire.e },
+            { mapsToF, SignalWire.f },
+            { mapsToG, SignalWire.g }
+        };
+    }
+
+    public int GetDigit(IEnumerable<SignalWire> mixedUpWires)
+    {
+        var intendedWires = mixedUpWires.Select(w => _mapping[w]).ToArray();
+        return NumberToWireMappings.Single(w => !w.Key.Except(intendedWires).Any()).Value;
+    }
+}
 
 public class Entry
 {
