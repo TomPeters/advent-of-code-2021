@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AdventOfCode.Day8;
@@ -60,6 +61,6 @@ gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
         return input.Split(" ")
             .Select(sp => sp.Trim())
             .Where(sp => sp != string.Empty)
-            .Select(sp => new SignalPattern(sp));
+            .Select(sp => new SignalPattern(sp.Select(sw => Enum.Parse<SignalWire>(sw.ToString()))));
     }
 }
