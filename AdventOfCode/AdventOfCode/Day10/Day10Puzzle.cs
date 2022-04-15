@@ -12,7 +12,7 @@ public static class Day10Puzzle
             .Sum(s => s.GetIllegalCharacterScore());
     }
 
-    public static int GetMiddleScoreOfCompletionStringsOfIncompleteLines(NavigationSubsystem navigationSubsystem)
+    public static long GetMiddleScoreOfCompletionStringsOfIncompleteLines(NavigationSubsystem navigationSubsystem)
     {
         return navigationSubsystem.Lines
             .Where(l => l.IsIncomplete())
@@ -45,7 +45,12 @@ public class NavigationSubsystemLine
         {
             if (symbol.IsEnd())
             {
-                stack.Pop();
+                var poppedChunkType = stack.Pop();
+
+                if (!symbol.IsSameChunkType(poppedChunkType))
+                {
+                    throw new Exception("Expected symbol to match current chunk type");
+                }
             }
             else
             {
@@ -91,9 +96,9 @@ public class CompletionString
         _completionSymbols = completionSymbols;
     }
 
-    public int GetScore()
+    public long GetScore()
     {
-        return _completionSymbols.Aggregate(0, (prev, cur) =>
+        return _completionSymbols.Aggregate(0L, (prev, cur) =>
         {
             var multipliedScore = prev * 5;
             return multipliedScore + cur.GetCompletionCharacterScore();
