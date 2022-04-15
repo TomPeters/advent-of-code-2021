@@ -59,4 +59,17 @@ public static class EnumerableExtensions
     {
         return enumerable.Where(e => e != null).Select(e => e!);
     }
+
+    public static T Middle<T>(this IEnumerable<T> enumerable)
+    {
+        var enumerableArray = enumerable.ToArray();
+        var length = enumerableArray.Length;
+        if (length % 2 == 0)
+        {
+            throw new Exception("Can't get the middle value of an enumerable with an even count");
+        }
+
+        var indexOfMiddleValue = (length - 1) / 2;
+        return enumerableArray[indexOfMiddleValue];
+    }
 }

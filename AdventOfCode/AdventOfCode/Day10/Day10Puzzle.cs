@@ -11,6 +11,16 @@ public static class Day10Puzzle
             .NotNull()
             .Sum(s => s.GetIllegalCharacterScore());
     }
+
+    public static int GetMiddleScoreOfCompletionStringsOfIncompleteLines(NavigationSubsystem navigationSubsystem)
+    {
+        return navigationSubsystem.Lines
+            .Where(l => l.IsIncomplete())
+            .Select(l => l.GetCompletionString())
+            .Select(cs => cs.GetScore())
+            .OrderBy(score => score)
+            .Middle();
+    }
 }
 
 public record NavigationSubsystem(IEnumerable<NavigationSubsystemLine> Lines);
@@ -22,6 +32,30 @@ public class NavigationSubsystemLine
     public NavigationSubsystemLine(IEnumerable<Symbol> chunkSymbols)
     {
         _chunkSymbols = chunkSymbols;
+    }
+
+    // After discarding corrupted lines, the remaining lines are incomplete.
+    public bool IsIncomplete() => !IsCorrupted();
+    bool IsCorrupted() => GetFirstIncorrectClosingSymbol() != null;
+
+    public CompletionString GetCompletionString()
+    {
+        var stack = new Stack<ChunkType>();
+        foreach (var symbol in _chunkSymbols)
+        {
+            if (symbol.IsEnd())
+            {
+                stack.Pop();
+            }
+            else
+            {
+                stack.Push(symbol.ChunkType);
+            }
+        }
+
+        var completionSymbols = stack.Select(chunkType => new Symbol(chunkType, Side.End));
+        return new CompletionString(completionSymbols);
+
     }
 
     public Symbol? GetFirstIncorrectClosingSymbol()
@@ -47,6 +81,25 @@ public class NavigationSubsystemLine
         return null;
     }
 };
+
+public class CompletionString
+{
+    readonly IEnumerable<Symbol> _completionSymbols;
+
+    public CompletionString(IEnumerable<Symbol> completionSymbols)
+    {
+        _completionSymbols = completionSymbols;
+    }
+
+    public int GetScore()
+    {
+        return _completionSymbols.Aggregate(0, (prev, cur) =>
+        {
+            var multipliedScore = prev * 5;
+            return multipliedScore + cur.GetCompletionCharacterScore();
+        });
+    }
+}
 
 public class Symbol
 {
@@ -78,6 +131,18 @@ public class Symbol
             ChunkType.SquareBracket => 57,
             ChunkType.Parens => 3,
             ChunkType.AngleBracket => 25137,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
+
+    public int GetCompletionCharacterScore()
+    {
+        return ChunkType switch
+        {
+            ChunkType.Brace => 3,
+            ChunkType.SquareBracket => 2,
+            ChunkType.Parens => 1,
+            ChunkType.AngleBracket => 4,
             _ => throw new ArgumentOutOfRangeException()
         };
     }

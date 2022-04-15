@@ -19,6 +19,18 @@ public class Day10
         Assert.Equal(167379, Day10Puzzle.GetTotalSyntaxErrorScoreForFirstErrorInLine(RealData));
     }
 
+    [Fact]
+    public void Part2WorksForSampleData()
+    {
+        Assert.Equal(288957, Day10Puzzle.GetMiddleScoreOfCompletionStringsOfIncompleteLines(SampleData));
+    }
+
+    [Fact]
+    public void Part2WorksForRealData()
+    {
+        Assert.Equal(27994957, Day10Puzzle.GetMiddleScoreOfCompletionStringsOfIncompleteLines(RealData));
+    }
+
     static NavigationSubsystem RealData => CreateNavigationSubsystemFromInput(FileHelper.ReadFromFile("Day10", "RealNavigationSubsystem.txt"));
 
     static NavigationSubsystem SampleData => CreateNavigationSubsystemFromInput(FileHelper.ReadFromFile("Day10", "SampleNavigationSubsystem.txt"));
