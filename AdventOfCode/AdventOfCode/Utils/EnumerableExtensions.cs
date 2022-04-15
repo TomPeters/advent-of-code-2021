@@ -55,7 +55,7 @@ public static class EnumerableExtensions
         return factors.Aggregate((prev, cur) => prev * cur);
     }
 
-    public static IEnumerable<T> NotNull<T>(this IEnumerable<T?> enumerable) where T : class
+    public static IEnumerable<T> NotNull<T>(this IEnumerable<T?> enumerable)
     {
         return enumerable.Where(e => e != null).Select(e => e!);
     }
