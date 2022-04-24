@@ -59,9 +59,9 @@ public class OctopusGrid
     {
         _octopuses.ForEach(o => o.IncreaseEnergyLevel());
         _octopuses.ForEach(o => o.FlashIfEnergyLevelHighEnough());
-        _octopuses.ForEach(o => o.ResetEnergyLevelIfFlashed());
+        _octopuses.ForEach(o => o.ResetForNextStep());
     }
-
+    
     public int NumberOfFlashes => _octopuses.Sum(o => o.NumberOfFlashes);
 
     record OctopusWithCoordinates(Octopus Octopus, int RowIndex, int ColumnIndex);
@@ -70,7 +70,8 @@ public class OctopusGrid
 public class Octopus
 {
     int _energyLevel;
-    int _numberOfFlashes = 0;
+    int _numberOfFlashes;
+    bool _hasBeenFlashedThisStep;
     readonly HashSet<Octopus> _adjacentOctopuses = new();
     
     const int EnergyLevelRequiredForFlash = 9;
@@ -87,17 +88,13 @@ public class Octopus
 
     void OnAdjacentOctopusFlashed()
     {
-        var originalEnergyLevel = _energyLevel;
         _energyLevel++;
-        if (originalEnergyLevel <= EnergyLevelRequiredForFlash)
-        {
-            FlashIfEnergyLevelHighEnough();
-        }
+        FlashIfEnergyLevelHighEnough();
     }
 
     public void FlashIfEnergyLevelHighEnough()
     {
-        if (_energyLevel > EnergyLevelRequiredForFlash)
+        if (_energyLevel > EnergyLevelRequiredForFlash && !_hasBeenFlashedThisStep)
         {
             Flash();
         }
@@ -106,14 +103,16 @@ public class Octopus
     void Flash()
     {
         _numberOfFlashes++;
+        _hasBeenFlashedThisStep = true;
         _adjacentOctopuses.ForEach(o => o.OnAdjacentOctopusFlashed());
     }
 
-    public void ResetEnergyLevelIfFlashed()
+    public void ResetForNextStep()
     {
-        if (_energyLevel > EnergyLevelRequiredForFlash)
+        if (_hasBeenFlashedThisStep)
         {
             _energyLevel = 0;
+            _hasBeenFlashedThisStep = false;
         }
     }
 

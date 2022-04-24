@@ -16,12 +16,12 @@ public class Day11
     [Fact]
     public void Part1WorksForRealData()
     {
-        Assert.Equal(1, Day11Puzzle.GetNumberOfFlashes(RealData, 100));
+        Assert.Equal(1632, Day11Puzzle.GetNumberOfFlashes(RealData, 100));
     }
     
-    static OctopusGrid RealData => CreateOctopusGrid(FileHelper.ReadFromFile("Day11", "SampleEnergyLevels.txt"));
+    static OctopusGrid RealData => CreateOctopusGrid(FileHelper.ReadFromFile("Day11", "RealEnergyLevels.txt"));
 
-    static OctopusGrid SampleData => CreateOctopusGrid(FileHelper.ReadFromFile("Day11", "RealEnergyLevels.txt"));
+    static OctopusGrid SampleData => CreateOctopusGrid(FileHelper.ReadFromFile("Day11", "SampleEnergyLevels.txt"));
 
     static OctopusGrid CreateOctopusGrid(string input)
     {
