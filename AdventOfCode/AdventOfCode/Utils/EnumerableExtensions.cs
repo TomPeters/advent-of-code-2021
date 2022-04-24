@@ -72,4 +72,14 @@ public static class EnumerableExtensions
         var indexOfMiddleValue = (length - 1) / 2;
         return enumerableArray[indexOfMiddleValue];
     }
+
+    public static IEnumerable<int> NaturalNumbers()
+    {
+        var num = 1;
+        while (true)
+        {
+            yield return num;
+            num++;
+        }
+    }
 }

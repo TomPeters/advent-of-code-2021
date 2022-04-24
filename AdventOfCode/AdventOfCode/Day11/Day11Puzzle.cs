@@ -9,6 +9,11 @@ public static class Day11Puzzle
         Enumerable.Range(0, numberOfSteps).ForEach(_ => octopusGrid.Step());
         return octopusGrid.NumberOfFlashes;
     }
+
+    public static int GetFirstStepWhereOctopusFlashesAreSynchronised(OctopusGrid octopusGrid)
+    {
+        return EnumerableExtensions.NaturalNumbers().First(_ => octopusGrid.Step().AllOctopusesWereSynchronised);
+    }
 }
 
 public class OctopusGrid
@@ -54,18 +59,25 @@ public class OctopusGrid
             adjacentOctopuses.ForEach(o => o.ConnectAdjacentOctopus(octopusWithCoords.Octopus));
         });
     }
-
-    public void Step()
+    
+    public StepResult Step()
     {
+        var initialNumberOfFlashes = NumberOfFlashes;
         _octopuses.ForEach(o => o.IncreaseEnergyLevel());
         _octopuses.ForEach(o => o.FlashIfEnergyLevelHighEnough());
         _octopuses.ForEach(o => o.ResetForNextStep());
+        var finalNumberOfFlashes = NumberOfFlashes;
+        var numberOfFlashesDuringThisStep = finalNumberOfFlashes - initialNumberOfFlashes;
+        var allOctopusesWereSynchronised = numberOfFlashesDuringThisStep == _octopuses.Length;
+        return new StepResult(allOctopusesWereSynchronised);
     }
     
     public int NumberOfFlashes => _octopuses.Sum(o => o.NumberOfFlashes);
 
     record OctopusWithCoordinates(Octopus Octopus, int RowIndex, int ColumnIndex);
 }
+
+public record StepResult(bool AllOctopusesWereSynchronised);
 
 public class Octopus
 {

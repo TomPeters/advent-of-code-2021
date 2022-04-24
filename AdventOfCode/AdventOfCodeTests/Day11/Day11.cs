@@ -19,6 +19,18 @@ public class Day11
         Assert.Equal(1632, Day11Puzzle.GetNumberOfFlashes(RealData, 100));
     }
     
+    [Fact]
+    public void Part2WorksForSampleData()
+    {
+        Assert.Equal(195, Day11Puzzle.GetFirstStepWhereOctopusFlashesAreSynchronised(SampleData));
+    }
+
+    [Fact]
+    public void Part2WorksForRealData()
+    {
+        Assert.Equal(303, Day11Puzzle.GetFirstStepWhereOctopusFlashesAreSynchronised(RealData));
+    }
+    
     static OctopusGrid RealData => CreateOctopusGrid(FileHelper.ReadFromFile("Day11", "RealEnergyLevels.txt"));
 
     static OctopusGrid SampleData => CreateOctopusGrid(FileHelper.ReadFromFile("Day11", "SampleEnergyLevels.txt"));
