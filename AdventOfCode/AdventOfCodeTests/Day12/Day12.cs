@@ -1,3 +1,4 @@
+using System.Linq;
 using AdventOfCode.Day12;
 using Xunit;
 
@@ -23,6 +24,11 @@ public class Day12
 
     static CaveNetwork CreateCaveNetwork(string input)
     {
-        return CaveNetwork.CreateCaveNetwork(input);
+        var connectionPairs = input.Split('\n').Select(connectionString =>
+        {
+            var connectionCaveIds = connectionString.Split("-");
+            return new ConnectedCavePair(connectionCaveIds[0], connectionCaveIds[1]);
+        });
+        return CaveNetwork.CreateCaveNetwork(connectionPairs);
     }
 }
