@@ -25,6 +25,8 @@
       <EmbeddedResource Include="Day10\SampleNavigationSubsystem.txt" />
       <EmbeddedResource Include="Day11\RealEnergyLevels.txt" />
       <EmbeddedResource Include="Day11\SampleEnergyLevels.txt" />
+      <EmbeddedResource Include="Day12\RealCaveNetworkConnections.txt" />
+      <EmbeddedResource Include="Day12\SampleCaveNetworkConnections.txt" />
       <EmbeddedResource Include="Day7\HorizontalPositions.txt" />
       <EmbeddedResource Include="Day8\SignalPatterns.txt" />
       <EmbeddedResource Include="Day9\HeightMap.txt" />
