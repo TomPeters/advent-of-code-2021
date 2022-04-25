@@ -15,7 +15,7 @@ public class Day12
     [Fact]
     public void Part1WorksForRealData()
     {
-        Assert.Equal(1, Day12Puzzle.GetNumberOfPathsThatVisitSmallCavesAtMostOnce(RealData));
+        Assert.Equal(5252, Day12Puzzle.GetNumberOfPathsThatVisitSmallCavesAtMostOnce(RealData));
     }
     
     static CaveNetwork RealData => CreateCaveNetwork(FileHelper.ReadFromFile("Day12", "RealCaveNetworkConnections.txt"));

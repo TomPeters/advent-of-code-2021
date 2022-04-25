@@ -6,7 +6,7 @@ public static class Day12Puzzle
 {
     public static int GetNumberOfPathsThatVisitSmallCavesAtMostOnce(CaveNetwork caveNetwork)
     {
-        return 0;
+        return caveNetwork.GetAllPathsThatVisitSmallCavesAtMostOnce().Count();
     }
 }
 
@@ -37,12 +37,28 @@ public class CaveNetwork
         _caves.Add(cave);
         return cave;
     }
+
+    public IEnumerable<Path> GetAllPathsThatVisitSmallCavesAtMostOnce()
+    {
+        var startCave = GetStartingCave();
+        return startCave.GetAllPathsToEndCaveThatVisitSmallCavesAtMostOnce();
+    }
+
+    Cave GetStartingCave()
+    {
+        if (!_caves.TryGetValue(Cave.StartCave, out var startCave))
+        {
+            throw new Exception("No start cave added to network");
+        }
+
+        return startCave;
+    }
 }
 
 public class Cave
 {
     readonly string _caveId;
-    public HashSet<Cave> _connectedCaves = new();
+    readonly HashSet<Cave> _connectedCaves = new();
 
     public Cave(string caveId)
     {
@@ -51,8 +67,10 @@ public class Cave
 
     public bool IsBigCave => IsUpperCase(_caveId);
 
-    public bool IsStartCave => _caveId == "start";
-    public bool IsEndCave => _caveId == "end";
+    public static Cave StartCave => new Cave("start");
+    public static Cave EndCave => new Cave("end");
+    public bool IsStartCave => Equals(StartCave);
+    public bool IsEndCave => Equals(EndCave);
 
     static bool IsUpperCase(string input) => input.ToUpperInvariant() == input;
 
@@ -60,6 +78,27 @@ public class Cave
     {
         _connectedCaves.Add(otherCave);
         otherCave._connectedCaves.Add(this);
+    }
+
+    public IEnumerable<Path> GetAllPathsToEndCaveThatVisitSmallCavesAtMostOnce()
+    {
+        return GetAllPathsToEndCaveThatVisitSmallCavesAtMostOnce(Path.From(this));
+    }
+
+    IEnumerable<Path> GetAllPathsToEndCaveThatVisitSmallCavesAtMostOnce(Path pathSoFarIncludingThisCave)
+    {
+        if (IsEndCave)
+        {
+            return new [] { pathSoFarIncludingThisCave };
+        }
+
+        return _connectedCaves.SelectMany(c =>
+        {
+            var pathWithConnectedCave = pathSoFarIncludingThisCave.Add(c);
+            if (!pathWithConnectedCave.VisitsSmallCavesAtMostOnce()) return Enumerable.Empty<Path>();
+
+            return c.GetAllPathsToEndCaveThatVisitSmallCavesAtMostOnce(pathWithConnectedCave);
+        }).ToArray();
     }
     
     protected bool Equals(Cave other)
@@ -80,6 +119,34 @@ public class Cave
         return _caveId.GetHashCode();
     }
 }
+
+public class Path
+{
+    public IEnumerable<Cave> CavesInPath { get; }
+
+    public Path(IEnumerable<Cave> cavesInPath)
+    {
+        CavesInPath = cavesInPath;
+    }
+
+    public static Path From(Cave cave)
+    {
+        return new Path(new[] { cave });
+    }
+
+    public Path Add(Cave cave)
+    {
+        return new Path(CavesInPath.Concat(new[] { cave }).ToArray());
+    }
+
+    public bool VisitsSmallCavesAtMostOnce()
+    {
+        return !CavesInPath
+            .GroupBy(cave => cave)
+            .Where(cave => !cave.Key.IsBigCave)
+            .Any(caveVisits => caveVisits.Count() > 1);
+    }
+};
 
 public class ConnectedCavePair
 {
