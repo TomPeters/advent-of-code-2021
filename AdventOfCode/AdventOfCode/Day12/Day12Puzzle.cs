@@ -65,10 +65,10 @@ public class Cave
         _caveId = caveId;
     }
 
-    public bool IsBigCave => IsUpperCase(_caveId);
+    public bool IsSmallCave => !IsUpperCase(_caveId);
 
-    public static Cave StartCave => new Cave("start");
-    public static Cave EndCave => new Cave("end");
+    public static Cave StartCave => new("start");
+    static Cave EndCave => new Cave("end");
     public bool IsStartCave => Equals(StartCave);
     public bool IsEndCave => Equals(EndCave);
 
@@ -151,7 +151,7 @@ public class VisitsSmallCavesAtMostOncePathValidator : IPathValidator
     {
         return !path.CavesInPath
             .GroupBy(cave => cave)
-            .Where(cave => !cave.Key.IsBigCave)
+            .Where(cave => cave.Key.IsSmallCave)
             .Any(caveVisits => caveVisits.Count() > 1);
     }
 }
@@ -162,7 +162,7 @@ public class Part2PathValidator : IPathValidator
     {
         var smallCaveGroups = path.CavesInPath
             .GroupBy(cave => cave)
-            .Where(cave => !cave.Key.IsBigCave)
+            .Where(cave => cave.Key.IsSmallCave)
             .ToList();
         
         var smallCavesVisitedMoreThanTwice = smallCaveGroups
@@ -190,8 +190,6 @@ public class ConnectedCavePair
         _rightCaveId = rightCaveId;
     }
 
-    public Cave LeftCave => new Cave(_leftCaveId);
-    public Cave RightCave => new Cave(_rightCaveId);
-
-    public IEnumerable<Cave> Caves => new[] { new Cave(_leftCaveId), new Cave(_rightCaveId) };
+    public Cave LeftCave => new(_leftCaveId);
+    public Cave RightCave => new(_rightCaveId);
 }
