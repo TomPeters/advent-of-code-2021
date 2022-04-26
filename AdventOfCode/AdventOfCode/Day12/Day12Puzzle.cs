@@ -4,9 +4,9 @@ namespace AdventOfCode.Day12;
 
 public static class Day12Puzzle
 {
-    public static int GetNumberOfPathsThatVisitSmallCavesAtMostOnce(CaveNetwork caveNetwork)
+    public static int GetNumberOfValidPaths(CaveNetwork caveNetwork, IPathValidator pathValidator)
     {
-        return caveNetwork.GetAllPathsThatVisitSmallCavesAtMostOnce().Count();
+        return caveNetwork.GetAllValidPaths(pathValidator).Count();
     }
 }
 
@@ -38,10 +38,10 @@ public class CaveNetwork
         return cave;
     }
 
-    public IEnumerable<Path> GetAllPathsThatVisitSmallCavesAtMostOnce()
+    public IEnumerable<Path> GetAllValidPaths(IPathValidator pathValidator)
     {
         var startCave = GetStartingCave();
-        return startCave.GetAllPathsToEndCaveThatVisitSmallCavesAtMostOnce();
+        return startCave.GetAllValidPathsToEndCave(pathValidator);
     }
 
     Cave GetStartingCave()
@@ -80,12 +80,12 @@ public class Cave
         otherCave._connectedCaves.Add(this);
     }
 
-    public IEnumerable<Path> GetAllPathsToEndCaveThatVisitSmallCavesAtMostOnce()
+    public IEnumerable<Path> GetAllValidPathsToEndCave(IPathValidator pathValidator)
     {
-        return GetAllPathsToEndCaveThatVisitSmallCavesAtMostOnce(Path.From(this));
+        return GetAllValidPathsToEndCave(Path.From(this), pathValidator);
     }
 
-    IEnumerable<Path> GetAllPathsToEndCaveThatVisitSmallCavesAtMostOnce(Path pathSoFarIncludingThisCave)
+    IEnumerable<Path> GetAllValidPathsToEndCave(Path pathSoFarIncludingThisCave, IPathValidator pathValidator)
     {
         if (IsEndCave)
         {
@@ -95,9 +95,9 @@ public class Cave
         return _connectedCaves.SelectMany(c =>
         {
             var pathWithConnectedCave = pathSoFarIncludingThisCave.Add(c);
-            if (!pathWithConnectedCave.VisitsSmallCavesAtMostOnce()) return Enumerable.Empty<Path>();
-
-            return c.GetAllPathsToEndCaveThatVisitSmallCavesAtMostOnce(pathWithConnectedCave);
+            return !pathValidator.IsValidPath(pathWithConnectedCave) 
+                ? Enumerable.Empty<Path>()
+                : c.GetAllValidPathsToEndCave(pathWithConnectedCave, pathValidator);
         }).ToArray();
     }
     
@@ -138,15 +138,46 @@ public class Path
     {
         return new Path(CavesInPath.Concat(new[] { cave }).ToArray());
     }
+};
 
-    public bool VisitsSmallCavesAtMostOnce()
+public interface IPathValidator
+{
+    public bool IsValidPath(Path path);
+}
+
+public class VisitsSmallCavesAtMostOncePathValidator : IPathValidator
+{
+    public bool IsValidPath(Path path)
     {
-        return !CavesInPath
+        return !path.CavesInPath
             .GroupBy(cave => cave)
             .Where(cave => !cave.Key.IsBigCave)
             .Any(caveVisits => caveVisits.Count() > 1);
     }
-};
+}
+
+public class Part2PathValidator : IPathValidator
+{
+    public bool IsValidPath(Path path)
+    {
+        var smallCaveGroups = path.CavesInPath
+            .GroupBy(cave => cave)
+            .Where(cave => !cave.Key.IsBigCave)
+            .ToList();
+        
+        var smallCavesVisitedMoreThanTwice = smallCaveGroups
+            .Any(caveGroup => caveGroup.Count() > 2);
+        
+        var numberOfSmallCavesVisitedTwice = smallCaveGroups
+            .Count(caveGroup => caveGroup.Count() == 2);
+
+        var multipleVisitsToStartOrEndCaves = smallCaveGroups
+            .Where(caveGroup => caveGroup.Key.IsEndCave || caveGroup.Key.IsStartCave)
+            .Any(caveGroup => caveGroup.Count() > 1);
+
+        return !smallCavesVisitedMoreThanTwice && numberOfSmallCavesVisitedTwice <= 1 && !multipleVisitsToStartOrEndCaves;
+    }
+}
 
 public class ConnectedCavePair
 {

@@ -9,13 +9,25 @@ public class Day12
     [Fact]
     public void Part1WorksForSampleData()
     {
-        Assert.Equal(226, Day12Puzzle.GetNumberOfPathsThatVisitSmallCavesAtMostOnce(SampleData));
+        Assert.Equal(226, Day12Puzzle.GetNumberOfValidPaths(SampleData, new VisitsSmallCavesAtMostOncePathValidator()));
     }
 
     [Fact]
     public void Part1WorksForRealData()
     {
-        Assert.Equal(5252, Day12Puzzle.GetNumberOfPathsThatVisitSmallCavesAtMostOnce(RealData));
+        Assert.Equal(5252, Day12Puzzle.GetNumberOfValidPaths(RealData, new VisitsSmallCavesAtMostOncePathValidator()));
+    }
+    
+    [Fact]
+    public void Part2WorksForSampleData()
+    {
+        Assert.Equal(3509, Day12Puzzle.GetNumberOfValidPaths(SampleData, new Part2PathValidator()));
+    }
+
+    [Fact]
+    public void Part2WorksForRealData()
+    {
+        Assert.Equal(147784, Day12Puzzle.GetNumberOfValidPaths(RealData, new Part2PathValidator()));
     }
     
     static CaveNetwork RealData => CreateCaveNetwork(FileHelper.ReadFromFile("Day12", "RealCaveNetworkConnections.txt"));
