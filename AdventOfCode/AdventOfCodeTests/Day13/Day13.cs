@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using AdventOfCode.Day13;
 using Xunit;
@@ -9,13 +11,38 @@ public class Day13
     [Fact]
     public void Part1WorksForSampleData()
     {
-        Assert.Equal(1, Day13Puzzle.NumberOfDotsVisibleAfterFirstFold(SampleData));
+        Assert.Equal(17, Day13Puzzle.NumberOfDotsVisibleAfterFirstFold(SampleData));
     }
 
     [Fact]
     public void Part1WorksForRealData()
     {
-        Assert.Equal(1, Day13Puzzle.NumberOfDotsVisibleAfterFirstFold(RealData));
+        Assert.Equal(607, Day13Puzzle.NumberOfDotsVisibleAfterFirstFold(RealData));
+    }
+    
+    [Fact]
+    public void PrintSampleOutput()
+    {
+        var result = string.Join("\n", Day13Puzzle.ApplyAllFoldsAndPrintResult(SampleData));
+        Assert.Equal(result, @"#####
+#...#
+#...#
+#...#
+#####");
+    }
+    
+    [Fact]
+    public void PrintRealOutput()
+    {
+        var result = string.Join("\n", Day13Puzzle.ApplyAllFoldsAndPrintResult(RealData));
+        
+        var expected = @".##..###..####.#....###..####.####.#...
+#..#.#..#....#.#....#..#.#.......#.#...
+#....#..#...#..#....#..#.###....#..#...
+#....###...#...#....###..#.....#...#...
+#..#.#....#....#....#....#....#....#...
+.##..#....####.####.#....#....####.####";
+        Assert.Equal(result, expected);
     }
     
     static Day13Input RealData => CreateInput(FileHelper.ReadFromFile("Day13", "TransparentPaper.txt"));
