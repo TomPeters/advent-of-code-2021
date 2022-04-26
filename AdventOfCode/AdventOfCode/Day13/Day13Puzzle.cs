@@ -81,28 +81,25 @@ public class Dot
     {
         if (foldLine.FoldAxis == FoldAxis.X)
         {
-            var displacementToFoldLine = _x - foldLine.FoldValue;
-            var isNotToTheRightOfTheFoldLine = displacementToFoldLine <= 0;
-            if (isNotToTheRightOfTheFoldLine)
-            {
-                return this;
-            }
-
-            var newXPosition = _x - displacementToFoldLine * 2;
+            var newXPosition = GetAdjustedCoordinate(_x, foldLine.FoldValue);
             return new Dot(newXPosition, _y);
         }
-        else
+
+        var newYPosition = GetAdjustedCoordinate(_y, foldLine.FoldValue);
+        return new Dot(_x, newYPosition);
+    }
+
+    static int GetAdjustedCoordinate(int originalCoord, int foldCoordinate)
+    {
+        var displacementToFoldLine = originalCoord - foldCoordinate;
+        var willNotBeFolded = displacementToFoldLine <= 0;
+        if (willNotBeFolded)
         {
-            var displacementToFoldLine = _y - foldLine.FoldValue;
-            var isNotBeneathTheFoldLine = displacementToFoldLine <= 0;
-            if (isNotBeneathTheFoldLine)
-            {
-                return this;
-            }
-            
-            var newYPosition = _y - displacementToFoldLine * 2;
-            return new Dot(_x, newYPosition);
+            return originalCoord;
         }
+
+        var foldedCoordinate = originalCoord - displacementToFoldLine * 2;
+        return foldedCoordinate;
     }
 
     protected bool Equals(Dot other)
