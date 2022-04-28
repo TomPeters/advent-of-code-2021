@@ -4,18 +4,88 @@ public static class Day14Puzzle
 {
     public static long DoThing(Day14Input input, int numberOfSteps)
     {
-        var finalPolymerTemplate = Enumerable.Range(0, numberOfSteps)
-            .Aggregate(input.PolymerTemplate, (prev, stepNumber) =>
-            {
-                var polymerTemplate = prev.Step(input.PairInsertionRules);
-                Console.WriteLine(stepNumber);
-                return polymerTemplate;
-            });
-        return finalPolymerTemplate.QuantityOfMostCommonElement() - finalPolymerTemplate.QuantityOfLeastCommonElement();
+        var countsAfterNumberOfSteps = input.PolymerTemplate.GetElementCountsAfterNumberOfSteps(numberOfSteps, input.PairInsertionRules);
+        return countsAfterNumberOfSteps.QuantityOfMostCommonElement() - countsAfterNumberOfSteps.QuantityOfLeastCommonElement();
     }
 }
 
 public record Day14Input(PolymerTemplate PolymerTemplate, PairInsertionRule[] PairInsertionRules);
+
+public class ElementCounts
+{
+    readonly IDictionary<char, long> _elementCounts;
+    readonly char _lastElementInPolymerTemplate;
+
+    ElementCounts(IDictionary<char, long> elementCounts, char lastElementInPolymerTemplate)
+    {
+        _elementCounts = elementCounts;
+        _lastElementInPolymerTemplate = lastElementInPolymerTemplate;
+    }
+
+    public static ElementCounts CreateForPair(Pair pair)
+    {
+        if (pair.FirstElement == pair.SecondElement)
+            return new ElementCounts(new Dictionary<char, long>() { { pair.FirstElement, 2 } }, pair.SecondElement);
+
+        return new ElementCounts(new Dictionary<char, long>()
+        {
+            { pair.FirstElement, 1 },
+            { pair.SecondElement, 1 },
+        }, pair.SecondElement);
+    } 
+
+    public static ElementCounts CombineCountsOfOverlappingPolymerTemplates(IEnumerable<ElementCounts> elementCounts)
+    {
+        return elementCounts.Aggregate((prev, cur) => prev.CombineCountsOfOverlappingPolymerTemplates(cur));
+    }
+
+    public ElementCounts CombineCountsOfOverlappingPolymerTemplates(ElementCounts countsOfSecondPolymerTemplate)
+    {
+        var firstElementCounts = _elementCounts;
+        var secondElementCounts = countsOfSecondPolymerTemplate._elementCounts;
+        var allPresentElements = firstElementCounts.Keys.Concat(secondElementCounts.Keys);
+        var newCounts = new Dictionary<char, long>();
+        foreach (var element in allPresentElements)
+        {
+            long firstCounts = firstElementCounts.TryGetValue(element, out var firstCount) ? firstCount : 0;
+            long secondCounts = secondElementCounts.TryGetValue(element, out var secondCount) ? secondCount : 0;
+            newCounts[element] = firstCounts + secondCounts;
+        }
+
+        // this element has been double counted
+        newCounts[_lastElementInPolymerTemplate] -= 1;
+
+        return new ElementCounts(newCounts, countsOfSecondPolymerTemplate._lastElementInPolymerTemplate);
+    }
+    
+    public long QuantityOfMostCommonElement()
+    {
+        return _elementCounts.Values.MaxBy(v => v);
+    }
+
+    public long QuantityOfLeastCommonElement()
+    {
+        return _elementCounts.Values.MinBy(v => v);
+    }
+}
+
+public class ElementCountCache
+{
+    readonly IDictionary<CacheKey, ElementCounts> _elementCountsCache = new Dictionary<CacheKey, ElementCounts>();
+    public ElementCounts? TryGet(Pair pair, int numberOfSteps)
+    {
+        var key = new CacheKey(pair, numberOfSteps);
+        return _elementCountsCache.TryGetValue(key, out var elementCounts) ? elementCounts : null;
+    }
+    
+    public void Add(Pair pair, int numberOfSteps, ElementCounts elementCounts)
+    {
+        var key = new CacheKey(pair, numberOfSteps);
+        _elementCountsCache[key] = elementCounts;
+    }
+    
+    record CacheKey(Pair Pair, int NumberOfSteps);
+}
 
 public class PolymerTemplate
 {
@@ -25,53 +95,31 @@ public class PolymerTemplate
     {
         _pairs = input.Zip(input.Skip(1), (first, second) => new Pair(first, second)).ToList();
     }
-
-    PolymerTemplate(List<Pair> pairs)
+    
+    public ElementCounts GetElementCountsAfterNumberOfSteps(int numberOfSteps, PairInsertionRule[] rules)
     {
-        _pairs = pairs;
+        var cache = new ElementCountCache();
+        return ElementCounts.CombineCountsOfOverlappingPolymerTemplates(_pairs.Select(pair => GetElementCountAfterNumberOfSteps(pair, numberOfSteps, rules, cache)));
     }
 
-    public PolymerTemplate Step(PairInsertionRule[] rules)
+    ElementCounts GetElementCountAfterNumberOfSteps(Pair pair, int numberOfSteps, PairInsertionRule[] rules, ElementCountCache cache)
     {
-        var newPairs = _pairs.SelectMany(p => GetNewPairs(p, rules)).ToList();
-        return new PolymerTemplate(newPairs);
-    }
-
-    IEnumerable<Pair> GetNewPairs(Pair pair, PairInsertionRule[] rules)
-    {
-        var matchingRule = rules.First(p => p.Matches(pair));
-        yield return pair with { SecondElement = matchingRule.OutputElement };
-        yield return pair with { FirstElement = matchingRule.OutputElement };
-    }
-
-    public long QuantityOfMostCommonElement()
-    {
-        return Elements()
-            .GroupBy(e => e)
-            .Max(e => e.Count());
-    }
-
-    public long QuantityOfLeastCommonElement()
-    {
-        return Elements()
-            .GroupBy(e => e)
-            .Min(e => e.Count());
-    }
-
-    public string Debug()
-    {
-        return new string(Elements().ToArray());
-    }
-
-    IEnumerable<char> Elements()
-    {
-        var first = _pairs.First();
-        yield return first.FirstElement;
-        foreach (var pair in _pairs)
+        var cachedValue = cache.TryGet(pair, numberOfSteps);
+        if (cachedValue is not null) return cachedValue;
+        if (numberOfSteps == 0)
         {
-            yield return pair.SecondElement;
+            return ElementCounts.CreateForPair(pair);
         }
-    } 
+        
+        var matchingRule = rules.First(p => p.Matches(pair));
+        var firstChildPair = pair with { SecondElement = matchingRule.OutputElement };
+        var secondChildPair = pair with { FirstElement = matchingRule.OutputElement };
+        var countsOfFirstChildPair = GetElementCountAfterNumberOfSteps(firstChildPair, numberOfSteps - 1, rules, cache);
+        var countsOfSecondChildPair = GetElementCountAfterNumberOfSteps(secondChildPair, numberOfSteps - 1, rules, cache);
+        var elementCounts = countsOfFirstChildPair.CombineCountsOfOverlappingPolymerTemplates(countsOfSecondChildPair);
+        cache.Add(pair, numberOfSteps, elementCounts);
+        return elementCounts;
+    }
 }
 
 public class PairInsertionRule

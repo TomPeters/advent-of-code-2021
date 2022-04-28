@@ -28,7 +28,7 @@ public class Day14
     [Fact]
     public void Part2WorksForRealData()
     {
-        Assert.Equal(5656, Day14Puzzle.DoThing(RealData, 40));
+        Assert.Equal(12271437788530L, Day14Puzzle.DoThing(RealData, 40));
     }
 
     static Day14Input SampleData => ParseInput(FileHelper.ReadFromFile("Day14", "SampleInstructions.txt"));
