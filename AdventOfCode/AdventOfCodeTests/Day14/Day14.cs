@@ -10,25 +10,25 @@ public class Day14
     [Fact]
     public void Part1WorksForSampleData()
     {
-        Assert.Equal(1588, Day14Puzzle.DoThing(SampleData, 10));
+        Assert.Equal(1588, Day14Puzzle.GetDifferenceBetweenMostCommonElementCountAndLeastCommonElementCountAfterNumberOfSteps(SampleData, 10));
     }
 
     [Fact]
     public void Part1WorksForRealData()
     {
-        Assert.Equal(5656, Day14Puzzle.DoThing(RealData, 10));
+        Assert.Equal(5656, Day14Puzzle.GetDifferenceBetweenMostCommonElementCountAndLeastCommonElementCountAfterNumberOfSteps(RealData, 10));
     }
     
     [Fact]
     public void Part2WorksForSampleData()
     {
-        Assert.Equal(2188189693529L, Day14Puzzle.DoThing(SampleData, 40));
+        Assert.Equal(2188189693529L, Day14Puzzle.GetDifferenceBetweenMostCommonElementCountAndLeastCommonElementCountAfterNumberOfSteps(SampleData, 40));
     }
 
     [Fact]
     public void Part2WorksForRealData()
     {
-        Assert.Equal(12271437788530L, Day14Puzzle.DoThing(RealData, 40));
+        Assert.Equal(12271437788530L, Day14Puzzle.GetDifferenceBetweenMostCommonElementCountAndLeastCommonElementCountAfterNumberOfSteps(RealData, 40));
     }
 
     static Day14Input SampleData => ParseInput(FileHelper.ReadFromFile("Day14", "SampleInstructions.txt"));

@@ -2,7 +2,7 @@ namespace AdventOfCode.Day14;
 
 public static class Day14Puzzle
 {
-    public static long DoThing(Day14Input input, int numberOfSteps)
+    public static long GetDifferenceBetweenMostCommonElementCountAndLeastCommonElementCountAfterNumberOfSteps(Day14Input input, int numberOfSteps)
     {
         var countsAfterNumberOfSteps = input.PolymerTemplate.GetElementCountsAfterNumberOfSteps(numberOfSteps, input.PairInsertionRules);
         return countsAfterNumberOfSteps.QuantityOfMostCommonElement() - countsAfterNumberOfSteps.QuantityOfLeastCommonElement();
@@ -58,15 +58,9 @@ public class ElementCounts
         return new ElementCounts(newCounts, countsOfSecondPolymerTemplate._lastElementInPolymerTemplate);
     }
     
-    public long QuantityOfMostCommonElement()
-    {
-        return _elementCounts.Values.MaxBy(v => v);
-    }
+    public long QuantityOfMostCommonElement() => _elementCounts.Values.MaxBy(v => v);
 
-    public long QuantityOfLeastCommonElement()
-    {
-        return _elementCounts.Values.MinBy(v => v);
-    }
+    public long QuantityOfLeastCommonElement() => _elementCounts.Values.MinBy(v => v);
 }
 
 public class ElementCountCache
