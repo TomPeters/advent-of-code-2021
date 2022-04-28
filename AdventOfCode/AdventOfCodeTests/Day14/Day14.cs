@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using AdventOfCode.Day14;
 using Xunit;
@@ -9,13 +10,25 @@ public class Day14
     [Fact]
     public void Part1WorksForSampleData()
     {
-        Assert.Equal(1, Day14Puzzle.DoThing(SampleData));
+        Assert.Equal(1588, Day14Puzzle.DoThing(SampleData, 10));
     }
 
     [Fact]
     public void Part1WorksForRealData()
     {
-        Assert.Equal(1, Day14Puzzle.DoThing(RealData));
+        Assert.Equal(5656, Day14Puzzle.DoThing(RealData, 10));
+    }
+    
+    [Fact]
+    public void Part2WorksForSampleData()
+    {
+        Assert.Equal(2188189693529L, Day14Puzzle.DoThing(SampleData, 40));
+    }
+
+    [Fact]
+    public void Part2WorksForRealData()
+    {
+        Assert.Equal(5656, Day14Puzzle.DoThing(RealData, 40));
     }
 
     static Day14Input SampleData => ParseInput(FileHelper.ReadFromFile("Day14", "SampleInstructions.txt"));
@@ -31,9 +44,9 @@ public class Day14
             .Select(pairInsertionRuleString =>
             {
                 var pairInsertionRuleParts = pairInsertionRuleString.Split(" -> ");
-                var output = pairInsertionRuleParts[1];
+                var output = Convert.ToChar(pairInsertionRuleParts[1]);
                 var inputParts = pairInsertionRuleParts[0];
-                return new PairInsertionRule(inputParts[0].ToString(), inputParts[1].ToString(), output);
+                return new PairInsertionRule(new Pair(inputParts[0], inputParts[1]), output);
             }).ToArray();
         
         return new Day14Input(polymerTemplate, pairInsertionRules);
