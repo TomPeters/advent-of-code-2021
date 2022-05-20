@@ -66,12 +66,17 @@ public class OctopusGrid
         _octopuses.ForEach(o => o.IncreaseEnergyLevel());
         _octopuses.ForEach(o => o.FlashIfEnergyLevelHighEnough());
         _octopuses.ForEach(o => o.ResetForNextStep());
+
+        return new StepResult(AllOctopusesWereSynchronised(initialNumberOfFlashes));
+    }
+
+    bool AllOctopusesWereSynchronised(int initialNumberOfFlashes)
+    {
         var finalNumberOfFlashes = NumberOfFlashes;
         var numberOfFlashesDuringThisStep = finalNumberOfFlashes - initialNumberOfFlashes;
-        var allOctopusesWereSynchronised = numberOfFlashesDuringThisStep == _octopuses.Length;
-        return new StepResult(allOctopusesWereSynchronised);
+        return numberOfFlashesDuringThisStep == _octopuses.Length;
     }
-    
+
     public int NumberOfFlashes => _octopuses.Sum(o => o.NumberOfFlashes);
 
     record OctopusWithCoordinates(Octopus Octopus, int RowIndex, int ColumnIndex);
