@@ -33,25 +33,9 @@ public class HeightMap
     public static HeightMap Create(int[][] heights)
     {
         var locationMap = heights.Select(row => row.Select(height => new Location(height)).ToList()).ToList();
-        ConnectHorizontallyAdjacentLocations(locationMap);
-        ConnectVerticallyAdjacentLocations(locationMap);
+        var connectedPairs = GridConnections.GetAdjacentLocations(locationMap);
+        connectedPairs.ForEach(pair => pair.First.ConnectToAdjacentLocation(pair.Second));
         return new HeightMap(locationMap.Flatten());
-    }
-
-    static void ConnectVerticallyAdjacentLocations(List<List<Location>> locationMap)
-    {
-        locationMap.Zip(locationMap.Skip(1), (row1, row2) => row1.Zip(row2, (top, bottom) => (top, bottom)))
-            .Flatten()
-            .ForEach(verticalPair => verticalPair.top.ConnectToAdjacentLocation(verticalPair.bottom));
-    }
-
-    static void ConnectHorizontallyAdjacentLocations(List<List<Location>> locationMap)
-    {
-        locationMap.ForEach(locationRow =>
-        {
-            locationRow.Zip(locationRow.Skip(1), (left, right) => (left, right))
-                .ForEach(horizontalPair => horizontalPair.left.ConnectToAdjacentLocation(horizontalPair.right));
-        });
     }
 
     public IEnumerable<Basin> Basins
