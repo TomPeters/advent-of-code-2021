@@ -15,7 +15,7 @@ public class Day15
     [Fact]
     public void Part1WorksForRealData()
     {
-        Assert.Equal(1, Day15Puzzle.GetRiskOfLowestRiskPath(RealData));
+        Assert.Equal(656, Day15Puzzle.GetRiskOfLowestRiskPath(RealData));
     }
     
     static Cave SampleData => ParseInput(FileHelper.ReadFromFile("Day15", "SampleCaveRiskLevels.txt"));

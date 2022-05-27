@@ -16,7 +16,7 @@ public class Cave
     readonly CaveLocation _startLocation;
     readonly CaveLocation _endLocation;
 
-    public Cave(CaveLocation startLocation, CaveLocation endLocation)
+    Cave(CaveLocation startLocation, CaveLocation endLocation)
     {
         _startLocation = startLocation;
         _endLocation = endLocation;
@@ -39,14 +39,39 @@ public class Cave
 
     public IEnumerable<Path> GetPathsOrderedByRisk()
     {
-        return new[] { new Path(new List<CaveLocation>() { _startLocation}) };
+        var seenLocations = new HashSet<CaveLocation>();
+        var incompletePathsByRisk = new PriorityQueue<Path, int>();
+        var startingPath = new Path(new [] { _startLocation });
+        incompletePathsByRisk.Enqueue(startingPath, startingPath.Risk);
+
+        while (incompletePathsByRisk.Count > 0)
+        {
+            var incompletePath = incompletePathsByRisk.Dequeue();
+            var incompletePathEndOfPath = incompletePath.EndOfPath;
+            seenLocations.Add(incompletePathEndOfPath);
+            var newPaths = incompletePathEndOfPath.AdjacentLocations
+                .Where(l => !seenLocations.Contains(l))
+                .Select(newLocation => incompletePath.AddNewLocation(newLocation));
+            
+            foreach (var path in newPaths)
+            {
+                if (path.EndOfPath == _endLocation)
+                {
+                    yield return path;
+                }
+                else
+                {
+                    incompletePathsByRisk.Enqueue(path, path.Risk);
+                }
+            }
+        }
     }
 }
 
 public class CaveLocation
 {
     public int RiskLevel { get; }
-    HashSet<CaveLocation> _adjacentLocations = new ();
+    readonly HashSet<CaveLocation> _adjacentLocations = new ();
 
     public CaveLocation(int riskLevel)
     {
@@ -58,16 +83,25 @@ public class CaveLocation
         _adjacentLocations.Add(location);
         location._adjacentLocations.Add(this);
     }
+
+    public IEnumerable<CaveLocation> AdjacentLocations => _adjacentLocations;
 }
 
 public class Path
 {
-    readonly List<CaveLocation> _locations;
+    readonly CaveLocation[] _locations;
 
-    public Path(List<CaveLocation> locations)
+    public Path(IEnumerable<CaveLocation> locations)
     {
-        _locations = locations;
+        _locations = locations.ToArray();
     }
 
-    public int Risk => _locations.Sum(l => l.RiskLevel);
+    public CaveLocation EndOfPath => _locations.Last();
+
+    public Path AddNewLocation(CaveLocation location)
+    {
+        return new Path(_locations.Concat(new[] { location }));
+    }
+
+    public int Risk => _locations.Skip(1).Sum(l => l.RiskLevel);
 }
